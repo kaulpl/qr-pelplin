@@ -51,7 +51,7 @@ add_action('template_redirect',function(){
     $posts=get_posts(['post_type'=>'qrp_item','post_status'=>'publish','numberposts'=>1,'meta_key'=>'qrp_token','meta_value'=>$token,'has_password'=>false]);
     if (!$posts) wp_die('Ta treść jest obecnie niedostępna. Skontaktuj się z administratorem portalu.','Treść QR niedostępna',['response'=>410]);
     qrp_record($posts[0]->ID,'scan');
-    wp_safe_redirect(get_permalink($posts[0]),302); exit;
+    wp_safe_redirect(qrp_target_url($posts[0]),302); exit;
 },0);
 add_action('qrp_cleanup',function(){
     global $wpdb; $s=qrp_settings();

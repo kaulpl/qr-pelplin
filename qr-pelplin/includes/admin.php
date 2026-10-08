@@ -19,11 +19,12 @@ add_action('admin_enqueue_scripts',function($hook){
             'categories'=>is_wp_error($categories)?[]:array_map(function($t){return ['id'=>$t->term_id,'name'=>$t->name];},$categories),
             'images'=>array_map(function($id){return ['id'=>$id,'url'=>qrp_image($id)];},array_values(array_unique(array_filter(array_merge([$s['logo'],$s['footer_logo'],$s['hero_image'],$s['map_image'],$s['about_image']],array_values($s['category_images'])))))),
             'preview'=>qrp_landing_url(),'add'=>admin_url('post-new.php?post_type=qrp_item'),'posts'=>admin_url('edit.php?post_type=qrp_item'),
-            'export'=>wp_nonce_url(admin_url('admin-post.php?action=qrp_export'),'qrp_export'),
+            'export'=>html_entity_decode(wp_nonce_url(admin_url('admin-post.php?action=qrp_export'),'qrp_export'),ENT_QUOTES,'UTF-8'),
         ]);
     }
     $screen=get_current_screen();
     if($screen && $screen->post_type==='qrp_item' && in_array($hook,['post.php','post-new.php'],true)){
+        wp_enqueue_media();wp_enqueue_script('qrp-media',QRP_URL.'assets/dist/media.js',[],QRP_VERSION,true);
         wp_enqueue_script('qrp-qr',QRP_URL.'assets/dist/qr.js',['wp-data','wp-blocks'],QRP_VERSION,true);
         wp_localize_script('qrp-qr','qrpQR',['api'=>rest_url('qr-pelplin/v1/'),'nonce'=>wp_create_nonce('wp_rest')]);
     }
@@ -37,6 +38,7 @@ add_action('add_meta_boxes',function(){
         foreach(['svg','png'] as $f){$url=wp_get_attachment_url(get_post_meta($post->ID,'qrp_qr_'.$f,true));if($url) echo '<a class="button" href="'.esc_url($url).'" download>Pobierz '.esc_html(strtoupper($f)).'</a> ';}
         echo '</p></div>';
     },'qrp_item','side','high');
+    add_meta_box('qrp-media','Prezentacja, pliki i galerie','qrp_media_box','qrp_item','normal','high');
     add_meta_box('qrp-location','Miejsce i multimedia','qrp_location_box','qrp_item','normal','default');
 });
 function qrp_location_box($post){
@@ -55,3 +57,23 @@ add_action('save_post_qrp_item',function($id){
 });
 add_filter('manage_qrp_item_posts_columns',function($c){$c['qrp_code']='Kod QR';return $c;});
 add_action('manage_qrp_item_posts_custom_column',function($column,$id){if($column==='qrp_code')echo get_post_meta($id,'qrp_qr_png',true)?'✓ SVG + PNG':'Jeszcze nie wygenerowano';},10,2);
+
+function qrp_media_box($post){
+    wp_nonce_field('qrp_media','qrp_media_nonce');
+    echo '<div data-qrp-media-box><p><label for="qrp_delivery"><strong>Co pokazać po zeskanowaniu QR?</strong></label><br><select id="qrp_delivery" name="qrp_delivery">';
+    foreach(['auto'=>'Automatycznie: treść lub sam plik','content'=>'Strona z treścią i materiałami','download'=>'Pobierz plik główny (PDF / JPG / MP3)','preview'=>'Strona z podglądem pliku','audio'=>'Odtwarzacz MP3'] as $value=>$label)echo '<option value="'.esc_attr($value).'" '.selected(get_post_meta($post->ID,'qrp_delivery',true)?:'auto',$value,false).'>'.esc_html($label).'</option>';
+    echo '</select></p><p>Automatycznie: jeśli wpis zawiera treść, galerię lub strony dokumentów, pokaże stronę. Sam PDF/JPG będzie pobrany; sam MP3 otworzy odtwarzacz. Przeglądarka może wymagać naciśnięcia przycisku odtwarzania.</p>';
+    foreach(['qrp_primary_file'=>'Plik główny (PDF, JPG lub MP3)','qrp_gallery'=>'Galeria zdjęć','qrp_documents'=>'Strony materiału (PDF / JPG)'] as $key=>$label){
+        $multiple=$key!=='qrp_primary_file';$ids=$multiple?(array)get_post_meta($post->ID,$key,true):[absint(get_post_meta($post->ID,$key,true))];$ids=array_filter($ids);
+        echo '<p><strong>'.esc_html($label).'</strong></p><input type="hidden" name="'.esc_attr($key).'" value="'.esc_attr($multiple?implode(',',$ids):($ids[0]??0)).'"><div data-media-preview="'.esc_attr($key).'">';
+        foreach($ids as $id)echo '<span class="qrp-selected-media" style="display:inline-block;padding:6px 10px;margin:3px;background:#f0f0f1">'.esc_html(get_the_title($id).' (#'.$id.')').'</span>';
+        echo '</div><p><button type="button" class="button" data-media-select="'.esc_attr($key).'" data-multiple="'.($multiple?'true':'false').'" data-title="'.esc_attr($label).'">Wybierz z biblioteki mediów</button> <button type="button" class="button" data-media-clear="'.esc_attr($key).'">Wyczyść</button></p>';
+    }
+    echo '<p>Zdjęcia i dokumenty będą prezentowane w kolejności wyboru. Możesz także używać bloków Galeria, Obraz, Plik i Audio w edytorze WordPressa. Po zmianie materiałów zapisz wpis. Dotychczasowy kod QR pozostaje ważny.</p></div>';
+}
+add_action('save_post_qrp_item',function($id){
+    if(wp_is_post_revision($id)||wp_is_post_autosave($id)||!current_user_can('edit_post',$id)||!isset($_POST['qrp_media_nonce'])||!wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['qrp_media_nonce'])),'qrp_media'))return;
+    update_post_meta($id,'qrp_delivery',qrp_clean_delivery(sanitize_key($_POST['qrp_delivery']??'auto')));
+    update_post_meta($id,'qrp_primary_file',qrp_clean_primary_file($_POST['qrp_primary_file']??0));
+    foreach(['qrp_gallery'=>'qrp_clean_gallery','qrp_documents'=>'qrp_clean_documents'] as $key=>$sanitize){$ids=array_map('absint',explode(',',sanitize_text_field(wp_unslash($_POST[$key]??''))));update_post_meta($id,$key,$sanitize($ids));}
+});

@@ -28,6 +28,10 @@ jobs:
           version: 11.19.0
       - run: pnpm install --frozen-lockfile
       - run: pnpm build && pnpm check && pnpm test
+      - name: Test WordPress media routing and update controls
+        env:
+          QRP_TEST_PHP: ${{ matrix.php }}
+        run: pnpm test:wordpress
       - name: Validate PHP with native interpreter
         run: find qr-pelplin -name '*.php' -print0 | xargs -0 -n1 php -l
       - name: Package installable ZIP

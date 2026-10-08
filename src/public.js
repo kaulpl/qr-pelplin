@@ -9,7 +9,7 @@ const menu=document.querySelector('.qrp-menu-toggle'), nav=document.querySelecto
 menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));nav.classList.toggle('is-open',open);});
 nav?.addEventListener('click',()=>{menu?.setAttribute('aria-expanded','false');nav.classList.remove('is-open');});
 for(const section of document.querySelectorAll('[data-content]')) {
-  let page=1, search='',category='',controller; const grid=section.querySelector('[data-grid]'),status=section.querySelector('[data-content-status]'),more=section.querySelector('[data-more]'),form=section.querySelector('form');
+  let page=Number(section.dataset.page||1), search='',category=section.dataset.category||'',controller; const grid=section.querySelector('[data-grid]'),status=section.querySelector('[data-content-status]'),more=section.querySelector('[data-more]'),form=section.querySelector('form');
   async function load(append=false){
     controller?.abort();controller=new AbortController();const next=append?page+1:1; status.textContent='Ładowanie historii…';more.disabled=true;
     try {const params=new URLSearchParams({page:next,per_page:section.dataset.count,search,category});const r=await fetch(config.api+'content?'+params,{signal:controller.signal});if(!r.ok)throw Error();const data=await r.json();
@@ -31,3 +31,4 @@ for (const section of document.querySelectorAll('.qrp-map-section')) {
 }
 const entry=document.querySelector('[data-entry-id]');
 if(entry) fetch(config.api+'view/'+entry.dataset.entryId,{method:'POST',keepalive:true}).catch(()=>{});
+for(const audio of document.querySelectorAll('[data-qrp-autoplay]'))audio.play().then(()=>{const hint=audio.parentElement.querySelector('[data-audio-hint]');if(hint)hint.textContent='Nagranie jest odtwarzane.';}).catch(()=>{});

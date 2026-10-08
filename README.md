@@ -1,4 +1,4 @@
-# QR Pelplin 1.0.0
+# QR Pelplin 1.1.0
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 
@@ -28,11 +28,29 @@ Wymagania: WordPress 6.6+, PHP 8.0+, HTTPS zalecane, zapisywalny katalog uploads
 
 Wybrana strona landing page i treści QR mają niezależny szablon, bez nagłówka aktywnego motywu. Shortcode `[qr_pelplin_landing]` osadzi same sekcje wewnątrz innej strony.
 
+## Aktualizacje, pliki i widoki (1.1.0)
+
+W **Wygląd i CMS → Aktualizacje** użyj **Sprawdź aktualizacje na GitHubie**. Nowe opublikowane wydanie wyświetli przycisk **Zaktualizuj do…**. Uruchamia on standardowy instalator WordPressa z kontrolą uprawnień i nonce, również na hostingach wymagających danych FTP. Błąd połączenia z GitHubem jest pokazany jako błąd, a nie informacja o aktualności. Instalacja wymaga uprawnienia update_plugins i włączonych modyfikacji plików.
+
+Przy wpisie znajdziesz panel **Prezentacja, pliki i galerie**. Wybierz plik główny, galerię zdjęć i/lub uporządkowane strony PDF/JPG z biblioteki mediów. Dodatkowo możesz używać standardowych bloków Galeria, Obraz, Plik i Audio.
+
+* **Automatycznie**: wpis z treścią, galerią lub stronami dokumentów wyświetla stronę. Sam PDF/JPG jest pobierany; sam MP3 otwiera odtwarzacz.
+* **Strona z treścią**: prezentuje treść i załączone materiały w layoucie portalu.
+* **Pobierz plik główny**: QR i kafelek kierują do pobrania pliku głównego.
+* **Podgląd pliku**: PDF lub obraz jest prezentowany jako strona materiału; PDF ma również link do otwarcia w osobnym oknie.
+* **Odtwarzacz MP3**: prezentuje odtwarzacz z próbą rozpoczęcia odtwarzania. Przeglądarki mobilne mogą wymagać dotknięcia przycisku Play.
+
+Zmiana materiału lub trybu nie zmienia tokenu QR. PDF/JPG może być dodatkiem do zwykłej treści. Dla plików lokalnych WordPress wysyła nagłówek Content-Disposition: attachment; przy plikach przeniesionych do CDN/storage zachowanie pobierania zależy od nagłówków tego storage. Galeria otwiera pełne zdjęcia w osobnym oknie. Podgląd PDF korzysta z czytnika przeglądarki, z linkiem zapasowym, gdy czytnik nie jest dostępny.
+
+Kategorie mają pełny layout portalu, przełączniki kategorii, kafelki wpisów, wyszukiwanie ograniczone do danej kategorii i przycisk ładowania kolejnych kart. Pojedynczy wpis na desktopie zachowuje layout; na telefonie ma wąski nagłówek, tytuł i samą treść/materiały bez rozbudowanej nawigacji i stopki.
+
+Domyślne logo łączy przekazany znak Pelplina z dekoracyjnym symbolem QR w kolorach portalu. Możesz zastąpić je własną grafiką w CMS. Symbol QR w logo jest elementem identyfikacji wizualnej, a nie kodem do skanowania.
+
 ## Stałe kody i statystyki
 
 QR koduje `https://twoja-domena/?qrp_code=stały-token`, a nie zmienny slug wpisu. Przekierowanie 302 prowadzi zawsze do aktualnego permalinku. Zmiana tytułu, slugu lub treści nie wymaga ponownego wydruku. Domena i token muszą pozostać niezmienione; po migracji domeny utrzymuj przekierowanie starej domeny. Nie usuwaj wpisów, których kody są wydrukowane. Niedostępna lub usunięta treść zwraca komunikat i HTTP 410.
 
-**Wyklucz adresy z parametrem `qrp_code` z cache/CDN**. Warstwa cache działająca przed PHP może ominąć naliczanie i przekierowanie. Odsłony treści są liczone przez AJAX, również gdy HTML strony pochodzi z cache.
+**Wyklucz adresy z parametrem `qrp_code` lub `qrp_download` z cache/CDN**. Warstwa cache działająca przed PHP może ominąć naliczanie i przekierowanie. Odsłony treści są liczone przez AJAX, również gdy HTML strony pochodzi z cache.
 
 Panel pokazuje wejścia przez adres QR, odsłony treści, wykres, ranking, zakres 7/30/90/365 dni i eksport dziennych danych CSV. To pomiar otwarcia linku; samo rozpoznanie kodu przez aparat bez otwarcia strony jest niewidoczne. Otwarcie ręcznie skopiowanego linku QR też jest liczone jako wejście QR. Odsłony zawierają również wizyty po QR.
 
@@ -47,6 +65,7 @@ pnpm install --frozen-lockfile
 pnpm build
 pnpm check
 pnpm test
+pnpm test:wordpress
 pnpm package
 ```
 

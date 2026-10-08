@@ -1,17 +1,14 @@
-# QR Pelplin 1.0.0
+# QR Pelplin 1.1.0
 
-Nowa, samodzielna implementacja wtyczki WordPress.
+* Ręczne sprawdzanie najnowszego wydania GitHuba w ustawieniach. Gdy jest dostępne, przycisk aktualizacji uruchamia natywny instalator WordPressa.
+* Strony kategorii w layoucie portalu: kafelki treści, przełączniki kategorii, wyszukiwanie w kategorii i paginacja AJAX.
+* Pojedyncze wpisy w layoucie portalu na desktopie; na telefonie wąski nagłówek i treść bez rozbudowanego menu/stopki.
+* Nowe logo: przekazany znak Pelplina z symbolem QR, w jasnej i złotej kolorystyce strony.
+* Panel materiałów przy wpisie: wybór galerii zdjęć, stron PDF/JPG i pliku głównego z biblioteki mediów.
+* Tryb automatyczny: treść → strona; sam PDF/JPG → pobranie; sam MP3 → odtwarzacz. Można też ręcznie wybrać prezentację treści, podgląd, pobieranie lub audio.
+* Stały QR pozostaje ważny po zmianie pliku lub trybu prezentacji. Wejścia do plików nadal są mierzone.
+* Poprawione przekazywanie nonce w linkach aktualizacji i eksportu CSV.
 
-* Ciemny landing page inspirowany trzecim wariantem wizualizacji: złote akcenty, nagłówki szeryfowe, zdjęcia, kategorie i mapa.
-* Panel CMS Vue 3: logo, grafiki, nagłówki, menu, stopka, projekt, kolory, kolejność i widoczność modułów, limity wyświetlania.
-* Edytor blokowy dla Treści QR: kategorie, zdjęcia wyróżniające, lokalizacje, galerie, audio i wideo.
-* Generator QR przy wpisie: stały token, zapisywane załączniki SVG i PNG oraz opcjonalne wstawienie obrazu do edytora.
-* Wyszukiwanie, filtrowanie i paginacja AJAX. Mapa OpenStreetMap z wyborem miejsca.
-* Statystyki wejść przez QR i odsłon, wykres, ranking, okresy i eksport CSV. Pomiar przybliżony, bez zapisu surowych IP.
-* Aktualizacje przez GitHub Releases. Paczka ZIP gotowa do instalacji w WordPressie, bez Node.js na serwerze.
+Wymagania: WordPress 6.6+, PHP 8.0+. Aktualizacja zachowuje wpisy, ustawienia i tokeny QR. W wersji 1.0.0 aktualizację wykonaj przez standardowy ekran Wtyczki/aktualizacji lub wgraj nowy ZIP; nowe przyciski pojawiają się od wersji 1.1.0.
 
-Instalacja: Wtyczki → Dodaj → Wyślij ZIP → Aktywuj. Konfiguracja: QR Pelplin → Wygląd i CMS.
-
-Przed drukiem opublikuj treść i sprawdź kod telefonem. Wyklucz `?qrp_code=` z cache/CDN. Wydrukowane kody wymagają zachowania domeny i wpisu.
-
-Wymagania: WordPress 6.6+, PHP 8.0+. Poprzednia historia Git i istniejące treści WordPress są zachowane.
+Przeglądarka może wymagać dotknięcia Play przy nagraniu MP3. Przy offloadzie plików do storage/CDN nagłówki pobierania należy ustawić również w storage.

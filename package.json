@@ -1,13 +1,14 @@
 {
   "name": "qr-pelplin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "node scripts/fetch-photo.mjs && node scripts/build.mjs && node scripts/licenses.mjs",
     "check": "node scripts/check.mjs",
     "test": "node --test tests/*.test.mjs",
-    "package": "node scripts/package.mjs"
+    "package": "node scripts/package.mjs",
+    "test:wordpress": "node scripts/test-wordpress.mjs"
   },
   "dependencies": {
     "qrcode": "1.5.4",
