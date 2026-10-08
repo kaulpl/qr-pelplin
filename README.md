@@ -1,0 +1,2 @@
+# qr-pelplin
+Odkryj Pelplin
