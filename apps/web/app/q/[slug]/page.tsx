@@ -1,0 +1,2 @@
+import {notFound} from 'next/navigation';import {entry} from '../../../lib/api';
+export default async function Page({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const item=await entry(slug);if(!item)notFound();return <main className="detail"><a href="/">← QR Pelplin</a><h1 dangerouslySetInnerHTML={{__html:item.title.rendered}}/><div dangerouslySetInnerHTML={{__html:item.content.rendered}}/></main>}
