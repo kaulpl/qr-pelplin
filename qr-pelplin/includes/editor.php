@@ -6,7 +6,7 @@ function qrp_editor_entry($post){
     if(!is_array($sections)||!$sections)$sections=[['uid'=>'legacy-'.$id,'html'=>$post->post_content]];
     $asset=function($aid)use($id){$file=qrp_media_file($aid,$id);if(!$file)return null;$file['display_name']=$file['title'];$file['thumbnail']=wp_get_attachment_image_url($aid,'medium')?:'';return $file;};
     $terms=wp_get_post_terms($id,'qrp_category',['fields'=>'ids']);
-    return ['id'=>$id,'title'=>$post->post_title,'excerpt'=>$post->post_excerpt,'slug'=>$post->post_name,'status'=>$post->post_status,'modified'=>$post->post_modified,'sections'=>$sections,'categories'=>is_wp_error($terms)?[]:$terms,
+    return ['seo_title'=>get_post_meta($id,'qrp_seo_title',true),'seo_description'=>get_post_meta($id,'qrp_seo_description',true),'seo_noindex'=>(bool)get_post_meta($id,'qrp_seo_noindex',true),'id'=>$id,'title'=>$post->post_title,'excerpt'=>$post->post_excerpt,'slug'=>$post->post_name,'status'=>$post->post_status,'modified'=>$post->post_modified,'sections'=>$sections,'categories'=>is_wp_error($terms)?[]:$terms,
         'thumbnail'=>get_post_thumbnail_id($id)?$asset(get_post_thumbnail_id($id)):null,
         'gallery'=>array_values(array_filter(array_map($asset,qrp_clean_gallery(get_post_meta($id,'qrp_gallery',true))))),
         'attachments'=>array_values(array_filter(array_map($asset,array_values(array_unique(array_merge(qrp_entry_files($id),array_filter([absint(get_post_meta($id,'qrp_audio',true)),absint(get_post_meta($id,'qrp_video',true))]))))))),
@@ -30,6 +30,7 @@ function qrp_editor_save($request){
     if(isset($data['slug'])&&$data['slug']!=='')$args['post_name']=sanitize_title($data['slug']);
     $saved=wp_insert_post(wp_slash($args),true);if(is_wp_error($saved))return $saved;
     update_post_meta($saved,'qrp_sections',$sections);
+    foreach(['seo_title','seo_description'] as $key)update_post_meta($saved,'qrp_'.$key,sanitize_text_field(substr((string)($data[$key]??''),0,500)));update_post_meta($saved,'qrp_seo_noindex',rest_sanitize_boolean($data['seo_noindex']??false));
     foreach(['gallery'=>'qrp_gallery','attachments'=>'qrp_attachments'] as $input=>$key){$ids=array_map(function($asset){return absint(is_array($asset)?($asset['id']??0):$asset);},is_array($data[$input]??null)?$data[$input]:[]);update_post_meta($saved,$key,$input==='gallery'?qrp_clean_gallery($ids):qrp_clean_attachments($ids));}
     $labels=[];foreach(array_merge(is_array($data['attachments']??null)?$data['attachments']:[],isset($data['primary'])?[$data['primary']]:[]) as $asset){if(is_array($asset)&&qrp_media_file(absint($asset['id']??0))){$label=sanitize_text_field($asset['display_name']??'');if($label!=='')$labels[absint($asset['id'])]=$label;}}update_post_meta($saved,'qrp_file_labels',$labels);
     // Old document pages are merged into the new attachment list on load.

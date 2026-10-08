@@ -2,6 +2,7 @@
 defined('ABSPATH') || exit;
 function qrp_defaults() {
     return [
+        'seo_enabled'=>true,'seo_index'=>true,'seo_title'=>'Pelplin QR — odkrywaj miejsca i historie','seo_description'=>'Odkryj Pelplin przez kody QR: historie, zabytki, zdjęcia, dokumenty i nagrania. Poznaj miejsca na mapie miasta.','seo_site_name'=>'Pelplin QR','seo_image'=>0,'seo_verification'=>'','seo_schema'=>true,
         'landing_page' => 0, 'brand' => 'PELPLIN', 'logo' => 0, 'footer_logo' => 0,
         'hero_image' => 0, 'hero_eyebrow' => 'TREŚCI DOSTĘPNE PO ZESKANOWANIU KODÓW QR',
         'hero_title' => "Pelplin\nbliżej Ciebie", 'hero_text' => 'Zeskanuj kod QR w wybranym miejscu i odkryj historie, ciekawostki oraz multimedia związane z naszym miastem.',
@@ -30,14 +31,16 @@ function qrp_clean_link($url) {
 function qrp_sanitize_settings($input) {
     $old = qrp_settings(); $out = $old;
     foreach (['brand','hero_eyebrow','hero_title','hero_text','hero_button','categories_title','content_title','map_title','map_text','about_title','about_text','footer_text','copyright'] as $k) if (isset($input[$k])) $out[$k] = in_array($k,['hero_text','map_text','about_text','footer_text'],true)?wp_kses_post(substr((string)$input[$k],0,5000)):sanitize_textarea_field(substr((string)$input[$k],0,5000));
-    foreach (['logo','footer_logo','hero_image','map_image','about_image'] as $k) if (isset($input[$k])) {
+    foreach(['seo_title','seo_description','seo_site_name'] as $key)if(isset($input[$key]))$out[$key]=sanitize_text_field(substr((string)$input[$key],0,500));
+    if(isset($input['seo_verification']))$out['seo_verification']=preg_replace('/[^a-zA-Z0-9_.-]/','',(string)$input['seo_verification']);
+    foreach (['seo_image','logo','footer_logo','hero_image','map_image','about_image'] as $k) if (isset($input[$k])) {
         $id=absint($input[$k]); $out[$k] = $id && wp_attachment_is_image($id) ? $id : 0;
     }
     if (isset($input['landing_page'])) {
         $id=absint($input['landing_page']); if (!$id || get_post_type($id)==='page') $out['landing_page']=$id;
     }
     foreach (['accent','background','text_color'] as $k) if (isset($input[$k])) $out[$k] = sanitize_hex_color($input[$k]) ?: $old[$k];
-    foreach (['show_search','show_qr_badge','analytics_enabled'] as $k) if (isset($input[$k])) $out[$k] = rest_sanitize_boolean($input[$k]);
+    foreach (['seo_enabled','seo_index','seo_schema','show_search','show_qr_badge','analytics_enabled'] as $k) if (isset($input[$k])) $out[$k] = rest_sanitize_boolean($input[$k]);
     foreach (['content_count'=>[1,48], 'category_count'=>[1,24], 'map_zoom'=>[3,18], 'retention_days'=>[7,730], 'qr_size'=>[256,2048]] as $k=>$range) if (isset($input[$k])) $out[$k]=max($range[0],min($range[1],absint($input[$k])));
     foreach (['map_lat'=>[-90,90], 'map_lng'=>[-180,180]] as $k=>$range) if (isset($input[$k]) && is_numeric($input[$k])) $out[$k]=max($range[0],min($range[1],(float)$input[$k]));
     if (isset($input['hero_button_url'])) $out['hero_button_url']=qrp_clean_link($input['hero_button_url']);

@@ -33,3 +33,6 @@ QR tylko przy publikacji, jednokrotnie; brak generowania w interfejsie i przez R
 
 ## 1.5.3
 Nagłówek Zobacz na mapie: nad mapą pojedynczego wpisu na wszystkich rozmiarach ekranu.
+
+## 1.6.0
+Spójny wygląd MP3 i informacji PDF. Ustawienia SEO portalu i wpisów: tytuły, opisy, indeksowanie, canonical, Open Graph, dane JSON-LD, weryfikacja Search Console i filtrowanie mapy witryny.
