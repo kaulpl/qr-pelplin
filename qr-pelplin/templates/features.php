@@ -1,0 +1,2 @@
+<?php defined('ABSPATH') || exit; ?>
+<section class="qrp-features" aria-label="Kategorie Pelplina"><?php foreach($s['features'] as $feature): $term=qrp_feature_term($feature);$url=$term?get_term_link($term):$feature['url'];if(is_wp_error($url))continue; ?><a href="<?php echo esc_url($url); ?>"><?php echo qrp_icon($feature['icon']); ?><span><?php echo esc_html($feature['title']?:($term?$term->name:'')); ?></span></a><?php endforeach; ?></section>

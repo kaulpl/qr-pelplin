@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 let text='Third-party software included in compiled production bundles\n\n';
-for(const name of ['vue','@vue/shared','@vue/reactivity','@vue/runtime-core','@vue/runtime-dom','@vue/compiler-core','@vue/compiler-dom','qrcode','dijkstrajs','entities']) {
+for(const name of ['vue','@vue/shared','@vue/reactivity','@vue/runtime-core','@vue/runtime-dom','@vue/compiler-core','@vue/compiler-dom','qrcode','dijkstrajs','entities','leaflet','pdfjs-dist']) {
 let dir=`node_modules/${name}`;
 if(!fs.existsSync(dir)){const pnpm=fs.readdirSync('node_modules/.pnpm').find(p=>p.startsWith(name.replace('/','+')+'@'));if(pnpm)dir=`node_modules/.pnpm/${pnpm}/node_modules/${name}`;}
 const file=fs.existsSync(dir)?fs.readdirSync(dir).find(f=>/^licen[cs]e(?:\..+)?$/i.test(f)):null;

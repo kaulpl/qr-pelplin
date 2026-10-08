@@ -1,4 +1,4 @@
-# QR Pelplin 1.1.0
+# QR Pelplin 1.2.0
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 
@@ -34,13 +34,13 @@ W **Wygląd i CMS → Aktualizacje** użyj **Sprawdź aktualizacje na GitHubie**
 
 Przy wpisie znajdziesz panel **Prezentacja, pliki i galerie**. Wybierz plik główny, galerię zdjęć i/lub uporządkowane strony PDF/JPG z biblioteki mediów. Dodatkowo możesz używać standardowych bloków Galeria, Obraz, Plik i Audio.
 
-* **Automatycznie**: wpis z treścią, galerią lub stronami dokumentów wyświetla stronę. Sam PDF/JPG jest pobierany; sam MP3 otwiera odtwarzacz.
+* **Automatycznie**: wpis z treścią, galerią lub stronami dokumentów wyświetla stronę. Sam PDF otwiera podgląd, JPG jest pobierany; sam MP3 otwiera odtwarzacz.
 * **Strona z treścią**: prezentuje treść i załączone materiały w layoucie portalu.
 * **Pobierz plik główny**: QR i kafelek kierują do pobrania pliku głównego.
 * **Podgląd pliku**: PDF lub obraz jest prezentowany jako strona materiału; PDF ma również link do otwarcia w osobnym oknie.
 * **Odtwarzacz MP3**: prezentuje odtwarzacz z próbą rozpoczęcia odtwarzania. Przeglądarki mobilne mogą wymagać dotknięcia przycisku Play.
 
-Zmiana materiału lub trybu nie zmienia tokenu QR. PDF/JPG może być dodatkiem do zwykłej treści. Dla plików lokalnych WordPress wysyła nagłówek Content-Disposition: attachment; przy plikach przeniesionych do CDN/storage zachowanie pobierania zależy od nagłówków tego storage. Galeria otwiera pełne zdjęcia w osobnym oknie. Podgląd PDF korzysta z czytnika przeglądarki, z linkiem zapasowym, gdy czytnik nie jest dostępny.
+Zmiana materiału lub trybu nie zmienia tokenu QR. PDF/JPG może być dodatkiem do zwykłej treści. Dla plików lokalnych WordPress wysyła nagłówek Content-Disposition: attachment; przy plikach przeniesionych do CDN/storage zachowanie pobierania zależy od nagłówków tego storage. Galeria otwiera pełne zdjęcia w osobnym oknie. Podgląd PDF korzysta z lokalnego PDF.js, z linkiem zapasowym do osobnego okna.
 
 Kategorie mają pełny layout portalu, przełączniki kategorii, kafelki wpisów, wyszukiwanie ograniczone do danej kategorii i przycisk ładowania kolejnych kart. Pojedynczy wpis na desktopie zachowuje layout; na telefonie ma wąski nagłówek, tytuł i samą treść/materiały bez rozbudowanej nawigacji i stopki.
 
@@ -76,3 +76,11 @@ Historia poprzedniej implementacji jest zachowana w Git i na gałęzi archiwalne
 ## Licencje i materiały
 
 Kod: GPL-2.0-or-later. Zdjęcie domyślne: Pliszka-GP, [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Pelplin_-_Katedra_wn%C4%99trze_008GP.jpg), CC BY-SA 4.0; na stronie nakładany jest gradient i kadrowanie CSS. Szczegóły w `qr-pelplin/assets/LICENSES.md`. Domyślny symbol katedry jest autorskim znakiem projektu, nie oficjalnym herbem miasta. Własne logo i fotografie wybierz w CMS.
+
+## Zmiany 1.2.0
+
+PDF w trybie automatycznym otwiera się od razu w portalu przez lokalny PDF.js. Czytnik ma przełączanie stron, numer strony i tekst strony. Ładuje dokument przy pojawieniu się podglądu na ekranie. Jawny tryb pobierania pozostaje opcją; dla zewnętrznego storage należy dopuścić CORS.
+
+W panelu **Pliki i prezentacja** po prawej stronie edytora można dodawać wiele PDF-ów, nagrań, zdjęć, filmów i typowych dokumentów. Kolejne dodania uzupełniają listę; przyciski zmieniają kolejność i usuwają pojedyncze pozycje. Materiały są prezentowane jako podglądy, odtwarzacze lub linki do pobrania.
+
+W panelu **Miejsce na mapie** kliknij **Wybierz miejsce na mapie**, wskaż punkt lub przeciągnij znacznik, wróć do wpisu i zapisz. Mapę można przesuwać również klawiaturą i zatwierdzić środek Enterem. Kafelki kategorii i skróty pod hero prowadzą do stron kategorii z hero i kafelkami treści. Powiązanie skrótu z kategorią wybierzesz w ustawieniach modułów. Po aktualizacji adresy kategorii są automatycznie odświeżane.

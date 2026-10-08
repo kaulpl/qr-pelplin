@@ -51,7 +51,11 @@ add_action('wp_enqueue_scripts',function(){
     if (!qrp_is_portal()) return;
     wp_enqueue_style('qrp-public',QRP_URL.'assets/public.css',[],QRP_VERSION);
     wp_enqueue_script('qrp-public',QRP_URL.'assets/dist/public.js',[],QRP_VERSION,true);
-    wp_localize_script('qrp-public','qrpPublic',['api'=>rest_url('qr-pelplin/v1/'),'landing'=>qrp_landing_url()]);
+    wp_localize_script('qrp-public','qrpPublic',['api'=>rest_url('qr-pelplin/v1/'),'landing'=>qrp_landing_url(),'pdfAssets'=>QRP_URL.'assets/vendor/']);
+    if(is_singular('qrp_item')){
+        $files=qrp_entry_files(get_queried_object_id());$primary=qrp_primary_file(get_queried_object_id());if($primary)$files[]=$primary['id'];
+        foreach($files as $id)if(get_post_mime_type($id)==='application/pdf'){wp_enqueue_script('qrp-pdf',QRP_URL.'assets/dist/pdf.js',['qrp-public'],QRP_VERSION,true);break;}
+    }
     $s=qrp_settings();
     wp_add_inline_style('qrp-public',':root{--qrp-accent:'.sanitize_hex_color($s['accent']).';--qrp-bg:'.sanitize_hex_color($s['background']).';--qrp-text:'.sanitize_hex_color($s['text_color']).';}');
 });
@@ -72,4 +76,16 @@ function qrp_content_query($params=[]) {
 }
 function qrp_cards($items) {
     foreach ($items as $post) { $item=qrp_item_data($post); echo qrp_template('card',['item'=>$item]); }
+}
+
+// Plugin upgrades do not run activation hooks. Refresh custom routes once per version.
+add_action('init',function(){
+    if(get_option('qrp_rewrite_version')!==QRP_VERSION){flush_rewrite_rules(false);update_option('qrp_rewrite_version',QRP_VERSION);}
+},99);
+function qrp_feature_term($feature){
+    $id=absint($feature['category_id']??0);if($id){$term=get_term($id,'qrp_category');if($term&&!is_wp_error($term))return $term;}
+    $title=$feature['title']??'';$term=get_term_by('name',$title,'qrp_category')?:get_term_by('slug',sanitize_title($title),'qrp_category');if($term)return $term;
+    $candidates=['crown'=>['historia-i-dziedzictwo','historia'],'map'=>['ciekawe-miejsca','turystyka'],'image'=>['zdjecia-i-multimedia','kultura'],'people'=>['wydarzenia-i-lokalne-inicjatywy','wydarzenia']];
+    foreach($candidates[$feature['icon']??'']??[] as $slug){$term=get_term_by('slug',$slug,'qrp_category');if($term)return $term;}
+    return false;
 }

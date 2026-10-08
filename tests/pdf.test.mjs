@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {createRequire} from 'node:module';import fs from 'node:fs';import {getDocument} from 'pdfjs-dist/legacy/build/pdf.mjs';
+const require=createRequire(import.meta.url),pdfRequire=createRequire(require.resolve('pdfjs-dist/package.json'));
+test('Bundled PDF reader renders document content instead of downloading',async()=>{
+ const stream='BT /F1 20 Tf 25 250 Td (QR Pelplin PDF preview) Tj ET';
+ const objects=['<</Type/Catalog/Pages 2 0 R>>','<</Type/Pages/Kids[3 0 R]/Count 1>>','<</Type/Page/Parent 2 0 R/MediaBox[0 0 300 300]/Resources<</Font<</F1 5 0 R>>>>/Contents 4 0 R>>',`<</Length ${stream.length}>>\nstream\n${stream}\nendstream`,'<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>'];
+ let pdf='%PDF-1.4\n',offsets=[];for(let i=0;i<objects.length;i++){offsets.push(pdf.length);pdf+=`${i+1} 0 obj\n${objects[i]}\nendobj\n`;}const xref=pdf.length;pdf+='xref\n0 6\n0000000000 65535 f \n'+offsets.map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')+`trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n${xref}\n%%EOF`;
+ const doc=await getDocument({data:new Uint8Array(Buffer.from(pdf)),useSystemFonts:true,isEvalSupported:false}).promise;
+ try{assert.equal(doc.numPages,1);const page=await doc.getPage(1);assert.match((await page.getTextContent()).items.map(i=>i.str).join(' '),/QR Pelplin PDF preview/);const {createCanvas}=pdfRequire('@napi-rs/canvas');const canvas=createCanvas(300,300);await page.render({canvasContext:canvas.getContext('2d'),viewport:page.getViewport({scale:1})}).promise;const pixels=canvas.getContext('2d').getImageData(0,0,300,300).data;assert(pixels.some((v,i)=>i%4!==3&&v<100),'PDF contains visibly rendered text');assert(fs.existsSync('qr-pelplin/assets/vendor/pdf.worker.min.js'));}finally{await doc.destroy();}
+});

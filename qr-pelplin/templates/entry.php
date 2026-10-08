@@ -7,7 +7,7 @@
 <?php if($file) qrp_render_file($file,$mode==='audio'); ?>
 <?php if($mode==='content'): ?>
 <?php $gallery=qrp_clean_gallery(get_post_meta($id,'qrp_gallery',true));if($gallery): ?><section class="qrp-gallery" aria-label="Galeria zdjęć"><?php foreach($gallery as $photo): ?><a href="<?php echo esc_url(wp_get_attachment_url($photo)); ?>" target="_blank" rel="noopener"><?php echo wp_get_attachment_image($photo,'large',['loading'=>'lazy']); ?></a><?php endforeach; ?></section><?php endif; ?>
-<div class="qrp-documents"><?php foreach(qrp_clean_documents(get_post_meta($id,'qrp_documents',true)) as $doc) if(!$file || $doc!==$file['id'])qrp_render_file(qrp_media_file($doc)); ?></div>
+<div class="qrp-documents"><?php foreach(qrp_entry_files($id) as $doc) if(!$file || $doc!==$file['id'])qrp_render_file(qrp_media_file($doc)); ?></div>
 <?php foreach(['audio','video'] as $type){$asset=(int)get_post_meta($id,'qrp_'.$type,true);if($file && $asset===$file['id'])continue;$url=$asset?wp_get_attachment_url($asset):'';if($url && str_starts_with(get_post_mime_type($asset)?:'',$type.'/'))echo '<'.$type.' controls preload="metadata" src="'.esc_url($url).'"></'.$type.'>';} ?>
 <?php endif; endif; ?>
 <?php $lat=get_post_meta($id,'qrp_lat',true);$lng=get_post_meta($id,'qrp_lng',true);if($mode==='content' && is_numeric($lat)&&is_numeric($lng)): ?><aside class="qrp-entry-location"><p><?php echo qrp_icon('pin').' '.esc_html(get_post_meta($id,'qrp_address',true)); ?></p><a class="qrp-button" href="<?php echo esc_url('https://www.openstreetmap.org/?mlat='.(float)$lat.'&mlon='.(float)$lng.'#map=17/'.(float)$lat.'/'.(float)$lng); ?>" target="_blank" rel="noopener">Zobacz miejsce na mapie ↗</a></aside><?php endif; ?>

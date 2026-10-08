@@ -1,14 +1,10 @@
-# QR Pelplin 1.1.0
+# QR Pelplin 1.2.0
 
-* Ręczne sprawdzanie najnowszego wydania GitHuba w ustawieniach. Gdy jest dostępne, przycisk aktualizacji uruchamia natywny instalator WordPressa.
-* Strony kategorii w layoucie portalu: kafelki treści, przełączniki kategorii, wyszukiwanie w kategorii i paginacja AJAX.
-* Pojedyncze wpisy w layoucie portalu na desktopie; na telefonie wąski nagłówek i treść bez rozbudowanego menu/stopki.
-* Nowe logo: przekazany znak Pelplina z symbolem QR, w jasnej i złotej kolorystyce strony.
-* Panel materiałów przy wpisie: wybór galerii zdjęć, stron PDF/JPG i pliku głównego z biblioteki mediów.
-* Tryb automatyczny: treść → strona; sam PDF/JPG → pobranie; sam MP3 → odtwarzacz. Można też ręcznie wybrać prezentację treści, podgląd, pobieranie lub audio.
-* Stały QR pozostaje ważny po zmianie pliku lub trybu prezentacji. Wejścia do plików nadal są mierzone.
-* Poprawione przekazywanie nonce w linkach aktualizacji i eksportu CSV.
+* PDF po skanowaniu QR otwiera się domyślnie jako podgląd w portalu, bez wymuszonego pobrania. Lokalny czytnik PDF.js renderuje strony także na telefonach; obsługuje nawigację po stronach i tekst dokumentu.
+* Wspólna sekcja wielu załączników: PDF, MP3/audio, zdjęcia, wideo i typowe pliki. Dodawanie kolejnych materiałów, usuwanie i kolejność; każdy materiał otrzymuje właściwy podgląd lub odtwarzacz.
+* Wizualny wybór miejsca na mapie Leaflet/OpenStreetMap: kliknięcie, przeciąganie znacznika lub wybór środka mapy. Współrzędne zapisują się automatycznie.
+* Strony kategorii z hero, zdjęciem kategorii, skrótami tematycznymi i kafelkami wpisów w layoucie strony głównej.
+* Skróty pod hero prowadzą do kategorii, z możliwością wyboru kategorii w CMS.
+* Reguły adresów odświeżają się automatycznie przy zmianie wersji wtyczki, także gdy aktualizacja pomija aktywację. Naprawia to 404 pod adresami kategorii po aktualizacji.
 
-Wymagania: WordPress 6.6+, PHP 8.0+. Aktualizacja zachowuje wpisy, ustawienia i tokeny QR. W wersji 1.0.0 aktualizację wykonaj przez standardowy ekran Wtyczki/aktualizacji lub wgraj nowy ZIP; nowe przyciski pojawiają się od wersji 1.1.0.
-
-Przeglądarka może wymagać dotknięcia Play przy nagraniu MP3. Przy offloadzie plików do storage/CDN nagłówki pobierania należy ustawić również w storage.
+Wymagania: WordPress 6.6+, PHP 8.0+. Aktualizacja zachowuje ustawienia, treści i tokeny QR. Jawnie wybrany tryb „Pobierz plik” nadal jest dostępny. PDF z zewnętrznego storage wymaga poprawnych nagłówków CORS do renderowania w przeglądarce.

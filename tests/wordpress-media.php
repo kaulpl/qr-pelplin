@@ -16,15 +16,22 @@ qrp_test(!qrp_media_file($bad),'Arbitrary SVG cannot be selected as content file
 qrp_test(qrp_clean_gallery([$jpg,$pdf,$bad,$jpg])===[$jpg],'Gallery validates images and deduplicates');
 qrp_test(qrp_clean_documents([$jpg,$pdf,$mp3,$bad])===[$jpg,$pdf],'Documents accept only safe images/PDF');
 $ids=[];
-foreach(['pdf'=>$pdf,'jpg'=>$jpg,'mp3'=>$mp3] as $kind=>$asset){$id=wp_insert_post(['post_type'=>'qrp_item','post_status'=>'publish','post_title'=>'Sam plik '.$kind,'post_content'=>'']);update_post_meta($id,'qrp_primary_file',$asset);qrp_token($id);$ids[$kind]=$id;qrp_test(qrp_delivery(get_post($id))===($kind==='mp3'?'audio':'download'),'File-only auto routing: '.$kind);}
+foreach(['pdf'=>$pdf,'jpg'=>$jpg,'mp3'=>$mp3] as $kind=>$asset){$id=wp_insert_post(['post_type'=>'qrp_item','post_status'=>'publish','post_title'=>'Sam plik '.$kind,'post_content'=>'']);update_post_meta($id,'qrp_primary_file',$asset);qrp_token($id);$ids[$kind]=$id;qrp_test(qrp_delivery(get_post($id))===($kind==='mp3'?'audio':($kind==='pdf'?'preview':'download')),'File-only auto routing: '.$kind);}
 $id=wp_insert_post(['post_type'=>'qrp_item','post_status'=>'publish','post_title'=>'Historia z galerią i dokumentem','post_content'=>'<!-- wp:paragraph --><p>Treść wpisu z opisem historii.</p><!-- /wp:paragraph -->']);
 wp_set_object_terms($id,['Zabytki'],'qrp_category');update_post_meta($id,'qrp_primary_file',$pdf);update_post_meta($id,'qrp_gallery',[$jpg]);update_post_meta($id,'qrp_documents',[$pdf,$jpg]);qrp_token($id);$ids['content']=$id;
 qrp_test(qrp_delivery(get_post($id))==='content','Text and file renders content');
-$empty=wp_insert_post(['post_type'=>'qrp_item','post_status'=>'publish','post_title'=>'Puste bloki','post_content'=>'<!-- wp:paragraph --><p>&nbsp;</p><!-- /wp:paragraph -->']);update_post_meta($empty,'qrp_primary_file',$pdf);qrp_test(qrp_delivery(get_post($empty))==='download','Empty paragraph is not content');
+$empty=wp_insert_post(['post_type'=>'qrp_item','post_status'=>'publish','post_title'=>'Puste bloki','post_content'=>'<!-- wp:paragraph --><p>&nbsp;</p><!-- /wp:paragraph -->']);update_post_meta($empty,'qrp_primary_file',$pdf);qrp_test(qrp_delivery(get_post($empty))==='preview','Empty paragraph is not content');
 update_post_meta($empty,'qrp_gallery',[$jpg]);qrp_test(qrp_delivery(get_post($empty))==='content','Gallery alone renders content');
 update_post_meta($empty,'qrp_gallery',[]);update_post_meta($empty,'qrp_delivery','preview');qrp_test(qrp_delivery(get_post($empty))==='preview','Explicit file preview');
 update_post_meta($empty,'qrp_delivery','download');qrp_test(str_contains(qrp_target_url(get_post($empty)),'qrp_download=1'),'Download target keeps stable post redirect');
-$fake=['version'=>'1.2.0','url'=>'https://github.com/kaulpl/qr-pelplin/releases/download/v1.2.0/qr-pelplin.zip','published'=>'2026-10-08','release_url'=>'https://github.com/kaulpl/qr-pelplin/releases/tag/v1.2.0'];set_transient('qrp_release',$fake,3600);$status=qrp_check_update();qrp_test($status['available'] && str_contains($status['update_url'],'_wpnonce=') && !str_contains($status['update_url'],'&amp;'),'Update URL is raw and nonce-protected');
+$fake=['version'=>'9.9.9','url'=>'https://github.com/kaulpl/qr-pelplin/releases/download/v9.9.9/qr-pelplin.zip','published'=>'2026-10-08','release_url'=>'https://github.com/kaulpl/qr-pelplin/releases/tag/v9.9.9'];set_transient('qrp_release',$fake,3600);$status=qrp_check_update();qrp_test($status['available'] && str_contains($status['update_url'],'_wpnonce=') && !str_contains($status['update_url'],'&amp;'),'Update URL is raw and nonce-protected');
 wp_set_current_user(0);$status=qrp_check_update();qrp_test(!$status['can_update'] && !$status['update_url'],'Anonymous cannot install updates');wp_set_current_user(1);
-delete_transient('qrp_release');update_option('qrp_test_media',$ids);
+delete_transient('qrp_release');
+qrp_test(qrp_clean_attachments([$pdf,$mp3,$jpg,$bad,$pdf])===[$pdf,$mp3,$jpg],'Mixed attachments accept and deduplicate PDF/audio/image');
+update_post_meta($ids['content'],'qrp_attachments',[$pdf,$mp3]);
+qrp_test(qrp_entry_files($ids['content'])===[$pdf,$mp3,$jpg],'All attachment lists merge without duplicates');
+qrp_test(!str_contains(qrp_target_url(get_post($ids['pdf'])),'qrp_download'),'PDF defaults to in-page preview after QR');
+$feature_term=qrp_feature_term(['title'=>'Historia i dziedzictwo','icon'=>'crown']);qrp_test($feature_term && $feature_term->slug==='historia','Legacy feature shortcut maps to a category');
+qrp_test(get_option('qrp_rewrite_version')===QRP_VERSION,'Routes refresh on plugin version migration');
+update_option('qrp_test_media',$ids);
 flush_rewrite_rules();echo 'MEDIA AND UPDATE TESTS PASSED';

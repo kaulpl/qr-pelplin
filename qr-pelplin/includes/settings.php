@@ -46,7 +46,7 @@ function qrp_sanitize_settings($input) {
         $out[$k]=[];
         foreach (array_slice($input[$k],0,20) as $row) {
             if (!is_array($row)) continue;
-            $out[$k][]=['label'=>sanitize_text_field($row['label']??''), 'title'=>sanitize_text_field($row['title']??''), 'url'=>qrp_clean_link($row['url']??''), 'icon'=>in_array($row['icon']??'', ['crown','map','image','people','book','pin'],true)?$row['icon']:'pin'];
+            $out[$k][]=['category_id'=>absint($row['category_id']??0),'label'=>sanitize_text_field($row['label']??''), 'title'=>sanitize_text_field($row['title']??''), 'url'=>qrp_clean_link($row['url']??''), 'icon'=>in_array($row['icon']??'', ['crown','map','image','people','book','pin'],true)?$row['icon']:'pin'];
         }
     }
     if (isset($input['modules']) && is_array($input['modules'])) {
