@@ -1,0 +1,1 @@
+{"private":true,"workspaces":["apps/web"],"scripts":{"dev":"npm run dev -w apps/web","build":"npm run build -w apps/web","check":"npm run check -w apps/web"}}
