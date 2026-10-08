@@ -3,6 +3,7 @@ defined('ABSPATH') || exit;
 add_action('admin_menu',function(){
     add_menu_page('QR Pelplin','QR Pelplin','edit_posts','qrp-dashboard','qrp_admin_dashboard','dashicons-location-alt',25);
     add_submenu_page('qrp-dashboard','Treści QR','Treści QR','edit_posts','qrp-items','qrp_admin_page');
+    add_submenu_page('qrp-dashboard','Kody QR','Kody QR','manage_options','qrp-codes','qrp_admin_page');
     add_submenu_page('qrp-dashboard','Wygląd i CMS','Wygląd i CMS','manage_options','qrp-settings','qrp_admin_page');
     add_submenu_page('qrp-dashboard','Statystyki','Statystyki','manage_options','qrp-stats','qrp_admin_page');
     add_submenu_page('qrp-dashboard','Kategorie','Kategorie','manage_categories','edit-tags.php?taxonomy=qrp_category&post_type=qrp_item');

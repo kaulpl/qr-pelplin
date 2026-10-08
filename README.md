@@ -1,4 +1,4 @@
-# QR Pelplin 1.4.3
+# QR Pelplin 1.5.0
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 
@@ -96,3 +96,6 @@ Cztery domyślne grafiki kategorii są realistycznymi ilustracjami AI inspirowan
 
 ## Wpisy i adresy (1.4.1)
 Wpisy używają /w/slug/, kategorie /k/slug/, QR /q/token/. Dawne adresy wpisów i kategorii przekierowują, a QR z parametrem qrp_code nadal działa. Galerie mają popup z przewijaniem, załączniki własne nazwy, opisy formatowanie, a mapy pinezki z podglądem historii.
+
+## Kody QR (1.5.0)
+Zakładka Kody QR pokazuje wygenerowane kody, ich stałe adresy, cele i pliki SVG/PNG. Administrator może przypisać kod do innej opublikowanej treści bez zmiany tokenu lub wydruku. Statystyki nowych wejść są naliczane aktualnej treści. Lista obejmuje także kody pierwotnie wygenerowane przy szkicach i wpisach w koszu; bez dostępnego celu zwracają 410.

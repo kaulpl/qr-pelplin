@@ -21,3 +21,6 @@ Złote separatory i wyróżniki nagłówków materiałów, narożniki kategorii,
 
 ## 1.4.3
 Pełna szerokość treści i brak separatorów przy miniaturze. Pasek informacji z czasem czytania, PDF, MP3 i galerią. Akcentowe narożniki wpisów i wyszukiwanie na bieżąco z anulowaniem starszych zapytań.
+
+## 1.5.0
+Rejestr kodów QR z pobieraniem SVG/PNG i zmianą docelowej treści bez zmiany wydrukowanych kodów. Wyszukiwanie i paginacja listy kodów oraz docelowych wpisów.
