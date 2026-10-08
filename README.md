@@ -1,4 +1,4 @@
-# QR Pelplin 1.5.0
+# QR Pelplin 1.5.1
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 

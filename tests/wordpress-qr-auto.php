@@ -1,0 +1,4 @@
+<?php
+require '/wordpress/wp-load.php';wp_set_current_user(1);
+$id=wp_insert_post(['post_type'=>'qrp_item','post_status'=>'draft','post_title'=>'QR auto test']);if(get_post_meta($id,'qrp_qr_png',true))throw new Exception('Draft must not generate QR');
+wp_update_post(['ID'=>$id,'post_status'=>'publish']);$png=(int)get_post_meta($id,'qrp_qr_png',true);$svg=(int)get_post_meta($id,'qrp_qr_svg',true);if(!$png||!$svg)throw new Exception('Published post QR failed: '.get_post_meta($id,'qrp_qr_error',true));$bytes=file_get_contents(get_attached_file($png));wp_update_post(['ID'=>$id,'post_title'=>'QR auto edited']);if((int)get_post_meta($id,'qrp_qr_png',true)!==$png)throw new Exception('Editing must retain QR attachment');if(!str_contains(file_get_contents(get_attached_file($svg)),'<svg'))throw new Exception('SVG missing');echo wp_json_encode(['png'=>base64_encode($bytes),'url'=>qrp_scan_url($id)]);

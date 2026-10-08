@@ -1,0 +1,1 @@
+QR encoder: Kazuhiko Arase, https://github.com/kazuhikoarase/qrcode-generator (php/qrcode.php), MIT. Local changes: namespace QRP\Encoder and prefixed constants to avoid WordPress plugin collisions. PNG rasterization is implemented separately without GD.

@@ -24,3 +24,6 @@ Pełna szerokość treści i brak separatorów przy miniaturze. Pasek informacji
 
 ## 1.5.0
 Rejestr kodów QR z pobieraniem SVG/PNG i zmianą docelowej treści bez zmiany wydrukowanych kodów. Wyszukiwanie i paginacja listy kodów oraz docelowych wpisów.
+
+## 1.5.1
+Serwer generuje QR automatycznie przy publikacji, również przez REST i WordPress. Kod na dole wpisu dopasowany do komputera, tabletu i telefonu. Jedno pole wyboru docelowej treści z bieżącym przypisaniem i zapisem po zmianie.
