@@ -1,4 +1,4 @@
-# QR Pelplin 1.2.0
+# QR Pelplin 1.3.0
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 
@@ -84,3 +84,12 @@ PDF w trybie automatycznym otwiera się od razu w portalu przez lokalny PDF.js. 
 W panelu **Pliki i prezentacja** po prawej stronie edytora można dodawać wiele PDF-ów, nagrań, zdjęć, filmów i typowych dokumentów. Kolejne dodania uzupełniają listę; przyciski zmieniają kolejność i usuwają pojedyncze pozycje. Materiały są prezentowane jako podglądy, odtwarzacze lub linki do pobrania.
 
 W panelu **Miejsce na mapie** kliknij **Wybierz miejsce na mapie**, wskaż punkt lub przeciągnij znacznik, wróć do wpisu i zapisz. Mapę można przesuwać również klawiaturą i zatwierdzić środek Enterem. Kafelki kategorii i skróty pod hero prowadzą do stron kategorii z hero i kafelkami treści. Powiązanie skrótu z kategorią wybierzesz w ustawieniach modułów. Po aktualizacji adresy kategorii są automatycznie odświeżane.
+
+
+## Autorski CMS (1.3.0)
+
+QR Pelplin → Treści QR otwiera własny panel listy i edytor w stylu CMS wtyczki. Zawiera wiele sekcji rich-text, osobną galerię ze wstawianiem zdjęć w wybrane miejsce tekstu, wiele załączników, wybór/utworzenie kategorii, miniaturę, wizualną mapę, status publikacji i generator QR z pobraniem SVG/PNG. Dane pozostają w typie qrp_item WordPressa; istniejące treści i stałe tokeny QR są zachowane. Edytor rich-text korzysta z lokalnego silnika WordPressa, a interfejs i przepływ zapisu są autorskie. Uprawnienia publikacji, przypisanie autorów i sanitacja HTML są sprawdzane na serwerze.
+
+Hero jest krótsze, bez współrzędnych, regionu i numeru sekcji. Kategorie mają jeszcze krótsze hero z tą samą grafiką co miniatura, bez modułu skrótów i bez nagłówka nad wyszukiwarką. Logo nie ma sloganu. Autor zdjęcia domyślnego i licencja są dostępne na stronie Materiały i licencje, zamiast w stopce.
+
+Cztery domyślne grafiki kategorii są realistycznymi ilustracjami AI inspirowanymi Pelplinem, wygenerowanymi przez wbudowane image_gen. Nie przedstawiają dokumentalnych zdjęć ani konkretnych rzeczywistych wydarzeń. Pakiet zawiera zoptymalizowane pliki WebP w qr-pelplin/assets/categories/. Pełne prompty są w docs/category-image-prompts.json. Własne zdjęcia wybrane w CMS mają pierwszeństwo.

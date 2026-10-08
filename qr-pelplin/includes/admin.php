@@ -1,24 +1,28 @@
 <?php
 defined('ABSPATH') || exit;
 add_action('admin_menu',function(){
-    add_menu_page('QR Pelplin','QR Pelplin','manage_options','qrp-dashboard','qrp_admin_page','dashicons-location-alt',25);
+    add_menu_page('QR Pelplin','QR Pelplin','edit_posts','qrp-dashboard','qrp_admin_dashboard','dashicons-location-alt',25);
+    add_submenu_page('qrp-dashboard','Treści QR','Treści QR','edit_posts','qrp-items','qrp_admin_page');
     add_submenu_page('qrp-dashboard','Wygląd i CMS','Wygląd i CMS','manage_options','qrp-settings','qrp_admin_page');
     add_submenu_page('qrp-dashboard','Statystyki','Statystyki','manage_options','qrp-stats','qrp_admin_page');
     add_submenu_page('qrp-dashboard','Kategorie','Kategorie','manage_categories','edit-tags.php?taxonomy=qrp_category&post_type=qrp_item');
 });
-function qrp_admin_page(){ if(current_user_can('manage_options')) echo '<div class="wrap"><div id="qrp-admin"><p>Ładowanie panelu QR Pelplin…</p></div></div>'; }
+function qrp_admin_dashboard(){if(!current_user_can('manage_options'))$_GET['page']='qrp-items';qrp_admin_page();}
+function qrp_admin_page(){ if(current_user_can('manage_options')||(($_GET['page']??'')==='qrp-items'&&current_user_can('edit_posts'))) echo '<div class="wrap"><div id="qrp-admin"><p>Ładowanie panelu QR Pelplin…</p></div></div>'; }
 add_action('admin_enqueue_scripts',function($hook){
     if (str_contains($hook,'qrp-')) {
-        wp_enqueue_media();wp_enqueue_style('qrp-admin',QRP_URL.'assets/admin.css',[],QRP_VERSION);
-        wp_enqueue_script('qrp-admin',QRP_URL.'assets/dist/admin.js',[],QRP_VERSION,true);
+        wp_enqueue_media();wp_enqueue_editor();wp_enqueue_style('qrp-own-editor',QRP_URL.'assets/dist/admin.css',[],QRP_VERSION);wp_enqueue_style('qrp-admin',QRP_URL.'assets/admin.css',[],QRP_VERSION);
+        wp_enqueue_script('qrp-admin',QRP_URL.'assets/dist/admin.js',['editor','jquery'],QRP_VERSION,true);
         $categories=get_terms(['taxonomy'=>'qrp_category','hide_empty'=>false]); $s=qrp_settings();
         wp_localize_script('qrp-admin','qrpAdmin',[
+            'systemLogo'=>QRP_URL.'assets/pelplin-qr.svg','defaultCategoryImages'=>qrp_default_category_images(),
             'api'=>rest_url('qr-pelplin/v1/'),'nonce'=>wp_create_nonce('wp_rest'),'settings'=>$s,
-            'page'=>sanitize_key($_GET['page']??'qrp-dashboard'),'version'=>QRP_VERSION,
+            'canCategories'=>current_user_can('manage_categories'),'canManage'=>current_user_can('manage_options'),'canPublish'=>current_user_can('publish_posts'),'entryId'=>absint($_GET['item']??0),'newEntry'=>isset($_GET['new']),
+            'page'=>current_user_can('manage_options')?sanitize_key($_GET['page']??'qrp-dashboard'):'qrp-items','version'=>QRP_VERSION,
             'pages'=>array_map(function($p){return ['id'=>$p->ID,'title'=>$p->post_title];},get_pages()),
             'categories'=>is_wp_error($categories)?[]:array_map(function($t){return ['id'=>$t->term_id,'name'=>$t->name];},$categories),
             'images'=>array_map(function($id){return ['id'=>$id,'url'=>qrp_image($id)];},array_values(array_unique(array_filter(array_merge([$s['logo'],$s['footer_logo'],$s['hero_image'],$s['map_image'],$s['about_image']],array_values($s['category_images'])))))),
-            'preview'=>qrp_landing_url(),'add'=>admin_url('post-new.php?post_type=qrp_item'),'posts'=>admin_url('edit.php?post_type=qrp_item'),
+            'preview'=>qrp_landing_url(),'add'=>admin_url('admin.php?page=qrp-items&new=1'),'posts'=>admin_url('admin.php?page=qrp-items'),
             'export'=>html_entity_decode(wp_nonce_url(admin_url('admin-post.php?action=qrp_export'),'qrp_export'),ENT_QUOTES,'UTF-8'),
         ]);
     }

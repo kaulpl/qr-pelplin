@@ -1,0 +1,30 @@
+[
+  {
+    "name": "places",
+    "prompt": "Photorealistic editorial-style category photograph of Pelplin, Poland: an authentic-looking view of the red-brick Cistercian cathedral and former monastery complex from the pedestrian courtyard, Baltic brick Gothic, massive elongated church, steep red tile roof and modest roof turret, pointed brick windows, green trees. Avoid generic twin-spire European cathedrals, modern fantasy architecture. Natural late afternoon light, subtle warm gold highlights and deep green shadows matching an elegant dark city portal. Landscape composition, generous architectural context, no text, no logo, no watermark. Generated illustrative scene, not a claim of documentary photography.",
+    "asset": "qr-pelplin/assets/categories/places.webp",
+    "tool": "built-in image_gen",
+    "generated": true
+  },
+  {
+    "name": "history",
+    "prompt": "Photorealistic editorial-style category illustration of Pelplin's Cistercian heritage: a quiet red-brick Gothic cloister passage in the former Cistercian monastery in Pelplin, northern Poland, authentic Baltic brick textures, ribbed vaults and pointed arches, a glimpse of the green monastery courtyard. Natural warm afternoon light, restrained gold highlights, soft shadow, accurate plausible monastic scale. No people, no text, no logos, no watermark, no invented grand Gothic twin towers. Landscape photograph composition for a city-history category card. AI illustration related to the real Pelplin monastery, not documentary photography.",
+    "asset": "qr-pelplin/assets/categories/history.webp",
+    "tool": "built-in image_gen",
+    "generated": true
+  },
+  {
+    "name": "multimedia",
+    "prompt": "Photorealistic editorial-style category image about photography and multimedia in Pelplin, Poland. View of the authentic-looking brick Gothic Pelplin cathedral courtyard through the hands and viewfinder of a photographer with a modern unbranded black mirrorless camera in the foreground. Cathedral is a massive elongated red-brick Cistercian church with steep tiled roof, not generic twin Gothic spires; foliage around the monastery square. Natural cinematic daylight, subtle warm gold and muted green tones matching a dark heritage portal. Landscape frame, camera and recognizable local architecture both readable. No readable camera labels, no text, no logos, no watermark. Plausible generated illustration.",
+    "asset": "qr-pelplin/assets/categories/multimedia.webp",
+    "tool": "built-in image_gen",
+    "generated": true
+  },
+  {
+    "name": "events",
+    "prompt": "Photorealistic editorial-style generated category illustration of a small local Cistercian heritage fair in Pelplin, Poland. A modest lively courtyard scene near the authentic-looking elongated brick Gothic Cistercian cathedral and monastery: artisan wooden stalls, a few families in normal contemporary clothes, regional Kociewie craft atmosphere, warm early evening light. Plausible civic event scene, no claim of a specific real event or identifiable real people. Deep green shadows and subtle golden highlights for a dark city portal, tasteful natural photo realism, landscape framing. No text, no logos, no watermark, no invented large cathedral spires.",
+    "asset": "qr-pelplin/assets/categories/events.webp",
+    "tool": "built-in image_gen",
+    "generated": true
+  }
+]

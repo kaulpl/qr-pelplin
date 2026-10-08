@@ -3,7 +3,7 @@ defined('ABSPATH') || exit;
 function qrp_register() {
     register_post_type('qrp_item', [
         'labels'=>['name'=>'Treści QR','singular_name'=>'Treść QR','add_new_item'=>'Dodaj treść QR','edit_item'=>'Edytuj treść QR'],
-        'public'=>true,'show_in_rest'=>true,'show_in_menu'=>current_user_can('manage_options')?'qrp-dashboard':true,'menu_icon'=>'dashicons-location-alt',
+        'public'=>true,'show_in_rest'=>true,'show_in_menu'=>false,'menu_icon'=>'dashicons-location-alt',
         'supports'=>['title','editor','excerpt','thumbnail','revisions','page-attributes'], 'rewrite'=>['slug'=>'q','with_front'=>false], 'has_archive'=>false,
     ]);
     register_taxonomy('qrp_category',['qrp_item'],['label'=>'Kategorie QR','public'=>true,'hierarchical'=>true,'show_in_rest'=>true,'rewrite'=>['slug'=>'kategoria-qr']]);
@@ -43,10 +43,10 @@ function qrp_template($file,$vars=[]) { extract($vars,EXTR_SKIP); ob_start(); in
 add_shortcode('qr_pelplin_landing',function(){return qrp_template('landing',['s'=>qrp_settings()]);});
 add_filter('template_include',function($template){
     $s=qrp_settings();
-    if (($s['landing_page'] && is_page($s['landing_page'])) || is_singular('qrp_item') || is_tax('qrp_category')) return QRP_DIR.'templates/shell.php';
+    if (isset($_GET['qrp_credits']) || ($s['landing_page'] && is_page($s['landing_page'])) || is_singular('qrp_item') || is_tax('qrp_category')) return QRP_DIR.'templates/shell.php';
     return $template;
 });
-function qrp_is_portal() { $s=qrp_settings(); return is_singular('qrp_item') || is_tax('qrp_category') || ($s['landing_page'] && is_page($s['landing_page'])) || (is_singular() && has_shortcode(get_post()->post_content??'','qr_pelplin_landing')); }
+function qrp_is_portal() { $s=qrp_settings(); return isset($_GET['qrp_credits']) || is_singular('qrp_item') || is_tax('qrp_category') || ($s['landing_page'] && is_page($s['landing_page'])) || (is_singular() && has_shortcode(get_post()->post_content??'','qr_pelplin_landing')); }
 add_action('wp_enqueue_scripts',function(){
     if (!qrp_is_portal()) return;
     wp_enqueue_style('qrp-public',QRP_URL.'assets/public.css',[],QRP_VERSION);
@@ -88,4 +88,16 @@ function qrp_feature_term($feature){
     $candidates=['crown'=>['historia-i-dziedzictwo','historia'],'map'=>['ciekawe-miejsca','turystyka'],'image'=>['zdjecia-i-multimedia','kultura'],'people'=>['wydarzenia-i-lokalne-inicjatywy','wydarzenia']];
     foreach($candidates[$feature['icon']??'']??[] as $slug){$term=get_term_by('slug',$slug,'qrp_category');if($term)return $term;}
     return false;
+}
+
+function qrp_category_image($term,$settings=null){
+    $s=$settings?:qrp_settings();$custom=qrp_image($s['category_images'][$term->term_id]??0);if($custom)return $custom;
+    $slug=$term->slug;$key='places';
+    if(str_contains($slug,'histor')||str_contains($slug,'dziedzict'))$key='history';
+    elseif(str_contains($slug,'multimed')||str_contains($slug,'zdjec')||str_contains($slug,'kultura'))$key='multimedia';
+    elseif(str_contains($slug,'wydarz')||str_contains($slug,'inicjaty'))$key='events';
+    $file='assets/categories/'.$key.'.webp';return file_exists(QRP_DIR.$file)?QRP_URL.$file:QRP_URL.'assets/hero.jpg';
+}
+function qrp_default_category_images(){
+    $out=[];$terms=get_terms(['taxonomy'=>'qrp_category','hide_empty'=>false]);if(!is_wp_error($terms))foreach($terms as $term)$out[$term->term_id]=qrp_category_image($term,qrp_defaults());return $out;
 }

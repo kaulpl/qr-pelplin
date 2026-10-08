@@ -3,7 +3,7 @@ Contributors: kaulpl
 Tags: qr, city, content, analytics, landing-page
 Requires at least: 6.6
 Requires PHP: 8.0
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,6 +14,9 @@ Upload qr-pelplin.zip in Plugins > Add New. Activate and open QR Pelplin > Wygl�
 Publish a Treść QR entry before printing its QR code. Exclude ?qrp_code= requests from cache/CDN.
 
 == Changelog ==
+= 1.3.0 =
+Custom CMS for QR entries: multiple rich-text sections, gallery and inline photos, attachments, categories, thumbnail, visual map and QR generation. Compact heroes and category layout, simpler logo/footer, generated default category illustrations.
+
 = 1.2.0 =
 Inline PDF.js viewer, multiple mixed attachments, visual map location picker, category heroes and category links below the main hero. Rewrite rules automatically refresh after plugin upgrades.
 

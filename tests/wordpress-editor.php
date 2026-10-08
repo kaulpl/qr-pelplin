@@ -1,0 +1,15 @@
+<?php
+require '/wordpress/wp-load.php';wp_set_current_user(1);
+function editor_test($condition,$message){if(!$condition)throw new Exception($message);}
+function editor_request($data,$id=0){$r=new WP_REST_Request('POST','/qr-pelplin/v1/entries');$r->set_header('content-type','application/json');$r->set_body(wp_json_encode($data));if($id)$r->set_url_params(['id'=>$id]);return $r;}
+$term=get_terms(['taxonomy'=>'qrp_category','hide_empty'=>false])[0];
+$data=['title'=>'Autorski CMS — test','status'=>'draft','excerpt'=>'Opis kafelka','sections'=>[['uid'=>'one','html'=>'<h2>Historia</h2><p>Pierwsza sekcja.</p><script>alert(1)</script>'],['uid'=>'two','html'=>'<p>Druga sekcja.</p>']],'categories'=>[$term->term_id],'gallery'=>[],'attachments'=>[],'thumbnail'=>null,'primary'=>null,'delivery'=>'auto','lat'=>'53.9285','lng'=>'18.6977','address'=>'Pelplin'];
+$saved=qrp_editor_save(editor_request($data));editor_test(!is_wp_error($saved),'Own CMS creates draft');$id=$saved['id'];editor_test(count($saved['sections'])===2,'Multiple rich-text sections preserved');editor_test(!str_contains(get_post($id)->post_content,'<script>'),'Rich text removes executable HTML');editor_test(str_contains(get_post($id)->post_content,'Druga sekcja'),'All text sections appear in content');editor_test($saved['lat']==='53.9285','Visual map coordinate persisted');editor_test(in_array($term->term_id,$saved['categories'],true),'Category persisted');
+$token=qrp_token($id);$data['title']='Zmieniona historia';$data['status']='publish';$updated=qrp_editor_save(editor_request($data,$id));editor_test(!is_wp_error($updated)&&$updated['status']==='publish','Publishing existing entry works');editor_test(qrp_token($id)===$token,'Stable QR survives own CMS saves');
+$bad=$data;$bad['lat']='999';$result=qrp_editor_save(editor_request($bad,$id));editor_test(is_wp_error($result),'Invalid map point rejected before save');
+$user=wp_insert_user(['user_login'=>'qrp_contributor_test','user_pass'=>'test-only-password','role'=>'contributor']);wp_set_current_user($user);$result=qrp_editor_save(editor_request($data));editor_test(is_wp_error($result),'Contributor cannot publish');$data['status']='draft';$own=qrp_editor_save(editor_request($data));editor_test(!is_wp_error($own),'Contributor can create own draft');editor_test(!qrp_edit_permission(editor_request([],$id)),'Contributor cannot edit another author entry');
+wp_set_current_user(0);editor_test(!qrp_editor_permission(),'Anonymous cannot use own CMS');wp_set_current_user(1);
+$hero=qrp_template('hero',['s'=>qrp_settings()]);editor_test(!str_contains($hero,'qrp-hero-caption')&&!str_contains($hero,'qrp-hero-index'),'Hero removes coordinates and index');editor_test(!str_contains(file_get_contents(QRP_DIR.'assets/pelplin-qr.svg'),'MIASTO OPOWIADA'),'Logo slogan removed');
+$footer=qrp_template('footer',['s'=>qrp_settings()]);editor_test(!str_contains($footer,'qrp-photo-credit')&&!str_contains($footer,'Odkrywaj. Skanuj. Poznawaj.'),'Footer text simplified');
+editor_test(str_contains(qrp_category_image($term),'/assets/categories/'),'Generated default category image is available');
+echo 'OWN CMS TESTS PASSED';
