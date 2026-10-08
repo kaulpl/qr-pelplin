@@ -41,7 +41,10 @@ add_action('admin_menu',function(){
 function qrp_dashboard(){
  if (!current_user_can('manage_options')) return;
  $count=wp_count_posts('qrp_item');
- echo '<div class="wrap"><h1>QR Pelplin</h1><p>Opublikowane treści: <strong>'.esc_html((string)($count->publish??0)).'</strong></p><p><a class="button button-primary" href="'.esc_url(admin_url('post-new.php?post_type=qrp_item')).'">Dodaj treść QR</a></p><p>Generator kodów QR i statystyki zostaną dodane w kolejnym etapie.</p></div>';
+ echo '<div class="wrap"><h1>QR Pelplin</h1><p>Opublikowane treści: <strong>'.esc_html((string)($count->publish??0)).'</strong></p><p><a class="button button-primary" href="'.esc_url(admin_url('post-new.php?post_type=qrp_item')).'">Dodaj treść QR</a></p><p>Generator kodów QR i statystyki zostaną dodane w kolejnym etapie.</p>';
+ $latest=qrp_release_info();
+ echo '<h2>Aktualizacje wtyczki</h2><p>Wersja zainstalowana: 0.1.0. '.($latest?'Najnowsza wersja na GitHubie: '.esc_html($latest['version']):'Nie udało się pobrać informacji o wydaniu.').'</p>';
+ echo '<p><a class="button" href="'.esc_url(wp_nonce_url(admin_url('admin-post.php?action=qrp_check_update'),'qrp_check_update')).'">Sprawdź aktualizacje (odśwież cache)</a> <a class="button button-primary" href="'.esc_url(admin_url('plugins.php')).'">Przejdź do aktualizacji</a></p></div>';
 }
 function qrp_settings(){
  if (!current_user_can('manage_options')) return;
