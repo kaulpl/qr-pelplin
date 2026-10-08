@@ -1,0 +1,5 @@
+import fs from 'node:fs';import crypto from 'node:crypto';
+const target='qr-pelplin/assets/hero.jpg', expected='ceab37fbc6876644fca8245a14956dc40683e7105301c19d9c5c9e1475915d8e';
+if(fs.existsSync(target)){const current=fs.readFileSync(target);if(crypto.createHash('sha256').update(current).digest('hex')===expected){console.log('Bundled photograph verified.');process.exit(0);}}
+const url='https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/Pelplin_-_Katedra_wn%C4%99trze_008GP.jpg/1920px-Pelplin_-_Katedra_wn%C4%99trze_008GP.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail';
+const r=await fetch(url,{headers:{'User-Agent':'QR-Pelplin/1.0 (https://github.com/kaulpl/qr-pelplin)'}});if(!r.ok)throw Error('Photo download failed: '+r.status);const bytes=Buffer.from(await r.arrayBuffer());if(crypto.createHash('sha256').update(bytes).digest('hex')!==expected)throw Error('Photograph integrity check failed');fs.writeFileSync(target,bytes);console.log('Bundled photograph downloaded and verified.');

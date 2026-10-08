@@ -1,2 +1,7 @@
-*.zip
+node_modules/
+release/
 .DS_Store
+*.log
+qr-pelplin/assets/dist/
+qr-pelplin/assets/hero.jpg
+docs/*.png

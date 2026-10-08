@@ -1,0 +1,2 @@
+import {build} from 'vite';
+for (const name of ['admin','qr','public']) await build({configFile:false,define:{'process.env.NODE_ENV':JSON.stringify('production'),__VUE_OPTIONS_API__:true,__VUE_PROD_DEVTOOLS__:false,__VUE_PROD_HYDRATION_MISMATCH_DETAILS__:false},build:{outDir:'qr-pelplin/assets/dist',emptyOutDir:name==='admin',lib:{entry:`src/${name}.js`,name:'QRP',formats:['iife'],fileName:()=>`${name}.js`},rollupOptions:{output:{inlineDynamicImports:true}}}});

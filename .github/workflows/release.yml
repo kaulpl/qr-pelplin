@@ -1,40 +1,62 @@
-name: Package WordPress plugin release
+name: Verify and publish WordPress plugin
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
+  pull_request:
   workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Existing release tag, e.g. v0.1.0'
-        required: true
-        default: 'v0.1.0'
 permissions:
-  contents: write
+  contents: read
+concurrency:
+  group: qr-pelplin-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  release:
+  verify:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.0', '8.3']
     steps:
       - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
         with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-      - name: Validate PHP
+          php-version: ${{ matrix.php }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build && pnpm check && pnpm test
+      - name: Validate PHP with native interpreter
         run: find qr-pelplin -name '*.php' -print0 | xargs -0 -n1 php -l
-      - name: Validate version
-        env:
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-        run: |
-          TAG="${RELEASE_TAG#v}"
-          grep -Fq "Version: ${TAG}" qr-pelplin/qr-pelplin.php
-      - name: Build installable WordPress ZIP
-        run: zip -r qr-pelplin.zip qr-pelplin -x '*.DS_Store'
-      - name: Publish or update GitHub release
+      - name: Package installable ZIP
+        run: pnpm package
+      - uses: actions/upload-artifact@v4
+        if: matrix.php == '8.3'
+        with:
+          name: qr-pelplin-plugin
+          path: release/qr-pelplin.zip
+  release:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: qr-pelplin-plugin
+          path: release
+      - name: Publish new version
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
         run: |
-          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
-            gh release upload "$RELEASE_TAG" qr-pelplin.zip --clobber
+          VERSION=$(sed -n 's/ \* Version: //p' qr-pelplin/qr-pelplin.php)
+          test -n "$VERSION"
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists; published assets remain immutable."
           else
-            gh release create "$RELEASE_TAG" qr-pelplin.zip --generate-notes --verify-tag
+            gh release create "v$VERSION" release/qr-pelplin.zip --target "$GITHUB_SHA" --title "QR Pelplin $VERSION" --notes-file docs/RELEASE-NOTES.md
           fi

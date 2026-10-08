@@ -1,0 +1,2 @@
+import fs from 'node:fs';import path from 'node:path';import {execFileSync} from 'node:child_process';
+const files=[];function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else files.push(p);}}walk('qr-pelplin');fs.mkdirSync('release',{recursive:true});const output='release/qr-pelplin.zip';if(fs.existsSync(output))fs.unlinkSync(output);execFileSync('zip',['-q',output,...files]);console.log(output);

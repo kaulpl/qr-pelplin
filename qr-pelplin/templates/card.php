@@ -1,0 +1,2 @@
+<?php defined('ABSPATH') || exit; ?>
+<article class="qrp-card"><a href="<?php echo esc_url($item['url']); ?>"><div class="qrp-card-image"><img src="<?php echo esc_url($item['image']); ?>" alt="" loading="lazy"><span class="qrp-card-arrow" aria-hidden="true">↗</span></div><div class="qrp-card-body"><span class="qrp-eyebrow"><?php echo esc_html($item['categories'][0]['name']??'PELPLIN'); ?></span><h3><?php echo esc_html($item['title']); ?></h3><p><?php echo esc_html(wp_trim_words($item['excerpt'],22)); ?></p></div></a></article>
