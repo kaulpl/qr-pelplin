@@ -1,18 +1,20 @@
-# Docelowe adresy QR Pelplin
+# QR Pelplin — zatwierdzona architektura
 
-- `https://qr.pelplin.pl/` — Next.js.
-- `https://qr.pelplin.pl/admin` — wejście do panelu WordPress (wymaga reverse proxy i sprawdzenia działania cookies, przekierowań, REST API, uploadów, wp-login.php, wp-admin, wp-content).
+- `https://qr.pelplin.pl` — publiczny frontend Next.js (docelowo Vercel).
+- `https://cms.qr.pelplin.pl/wp-admin` — panel administracyjny WordPress na home.pl.
+- `https://cms.qr.pelplin.pl/wp-json/wp/v2/qr_entry` — publiczne API treści.
+- GitHub `kaulpl/qr-pelplin` — wspólne repozytorium kodu.
 
-## Ważne ograniczenie
+Nie używamy proxy /admin. WordPress działa na osobnej subdomenie.
 
-Obecny WordPress działa pod qr.pelplin.pl na hostingu współdzielonym home.pl. Nie można skierować jednego hosta DNS jednocześnie na home.pl i Vercel według ścieżki URL. Konieczny jest reverse proxy/edge router albo osobna domena origin WordPressa z kontrolowanym proxy dla /admin. Sam redirect /admin do /wp-admin nie zachowa publicznego adresu /admin.
+## Kolejność przełączenia
 
-## Zalecana ścieżka
+1. Wykonaj pełną kopię plików i bazy danych istniejącego WordPressa.
+2. W panelu home.pl dodaj subdomenę cms.qr.pelplin.pl, kierując ją do katalogu WordPressa; zapewnij certyfikat TLS.
+3. Przed zmianą adresów zweryfikuj sposób konfiguracji domen w home.pl. Zmień WordPress Address i Site Address na https://cms.qr.pelplin.pl (w razie potrzeby przez WP-CLI lub bazę po kopii zapasowej).
+4. Sprawdź logowanie, media, REST API, linki i certyfikat HTTPS. Dla istniejących danych migrację URL wykonuj narzędziem obsługującym serializowane dane, a nie zwykłym SQL REPLACE.
+5. Wgraj i aktywuj wtyczkę QR Pelplin; utwórz treść testową.
+6. Uruchom frontend Next.js na adresie testowym Vercel z WORDPRESS_API_URL=https://cms.qr.pelplin.pl.
+7. Po testach zmień DNS qr.pelplin.pl według instrukcji Vercel. Zachowaj subdomenę CMS skierowaną na home.pl.
 
-1. Wykonać backup bazy i plików WordPressa.
-2. Potwierdzić możliwości hostingu home.pl i wybrać origin backendu (np. cms.qr.pelplin.pl).
-3. Uruchomić Next.js na adresie testowym, bez zmiany DNS produkcyjnego.
-4. Zdecydować o warstwie reverse proxy dla /admin i tras systemowych WordPressa. Zabezpieczyć endpointy i cookies, zweryfikować media, logowanie, formularze i wylogowanie.
-5. Dopiero po testach przełączyć qr.pelplin.pl.
-
-Nie traktować `/admin` jako gotowego mechanizmu bezpieczeństwa; konieczne są aktualizacje, uprawnienia i MFA. Jeśli routing pod jednym hostem będzie zbyt skomplikowany, alternatywą jest osobny origin `cms.qr.pelplin.pl` oraz przekierowanie z `/admin`, które zmieni adres w przeglądarce.
+Automatyczne wdrażanie wtyczki na home.pl wymaga odrębnej konfiguracji bezpiecznego dostępu SFTP/SSH; nie jest jeszcze aktywne.
