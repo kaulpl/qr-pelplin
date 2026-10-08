@@ -18,3 +18,6 @@ Opis wpisu na pełną szerokość, sama mapa we wpisie, stale widoczna mapa gł�
 
 ## 1.4.2
 Złote separatory i wyróżniki nagłówków materiałów, narożniki kategorii, strzałki kart, wielkie litery kategorii we wpisie i uproszczona stopka. Logo pod nową nazwą pliku i pobieranie lokalizacji bez cache zapobiegają wyświetlaniu starszych danych.
+
+## 1.4.3
+Pełna szerokość treści i brak separatorów przy miniaturze. Pasek informacji z czasem czytania, PDF, MP3 i galerią. Akcentowe narożniki wpisów i wyszukiwanie na bieżąco z anulowaniem starszych zapytań.

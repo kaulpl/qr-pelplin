@@ -10,14 +10,15 @@ const menu=document.querySelector('.qrp-menu-toggle'), nav=document.querySelecto
 menu?.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));nav.classList.toggle('is-open',open);});
 nav?.addEventListener('click',()=>{menu?.setAttribute('aria-expanded','false');nav.classList.remove('is-open');});
 for(const section of document.querySelectorAll('[data-content]')) {
-  let page=Number(section.dataset.page||1), search='',category=section.dataset.category||'',controller; const grid=section.querySelector('[data-grid]'),status=section.querySelector('[data-content-status]'),more=section.querySelector('[data-more]'),form=section.querySelector('form');
-  async function load(append=false){
-    controller?.abort();controller=new AbortController();const next=append?page+1:1; status.textContent='Ładowanie historii…';more.disabled=true;
-    try {const params=new URLSearchParams({page:next,per_page:section.dataset.count,search,category});const r=await fetch(config.api+'content?'+params,{signal:controller.signal});if(!r.ok)throw Error();const data=await r.json();
-      if(!append)grid.replaceChildren();data.items.forEach(i=>grid.append(card(i)));page=next;more.hidden=page>=data.pages;status.textContent=data.items.length?'':'Nie znaleziono treści. Zmień wyszukiwanie lub kategorię.';section.querySelector('.qrp-total').textContent=data.total+' treści';
-    }catch(e){if(e.name!=='AbortError')status.textContent='Nie udało się pobrać treści. Spróbuj ponownie.';}finally{more.disabled=false;}
-  }
-  form?.addEventListener('submit',e=>{e.preventDefault();const data=new FormData(form);search=data.get('search');category=data.get('category');load();});more?.addEventListener('click',()=>load(true));
+ let page=Number(section.dataset.page||1),search='',category=section.dataset.category||'',controller,timer,revision=0;
+ const grid=section.querySelector('[data-grid]'),status=section.querySelector('[data-content-status]'),more=section.querySelector('[data-more]'),form=section.querySelector('form');
+ async function load(append=false){controller?.abort();const request=new AbortController();controller=request;const current=++revision,next=append?page+1:1;status.textContent='Ładowanie historii…';more.disabled=true;grid.setAttribute('aria-busy','true');
+ try{const params=new URLSearchParams({page:next,per_page:section.dataset.count,search,category});const response=await fetch(config.api+'content?'+params,{signal:request.signal});if(!response.ok)throw Error();const data=await response.json();if(current!==revision)return;
+ if(!append)grid.replaceChildren();data.items.forEach(item=>grid.append(card(item)));page=next;more.hidden=page>=data.pages;status.textContent=data.items.length?'':'Nie znaleziono treści. Zmień wyszukiwanie.';section.querySelector('.qrp-total').textContent=data.total+' treści';
+ }catch(error){if(error.name!=='AbortError'&&current===revision)status.textContent='Nie udało się pobrać treści. Spróbuj ponownie.';}finally{if(current===revision){more.disabled=false;grid.setAttribute('aria-busy','false');}}}
+ function criteria(){search=form?.querySelector('[name=search]')?.value||'';category=form?.querySelector('[name=category]')?.value||section.dataset.category||'';}
+ form?.querySelector('[name=search]')?.addEventListener('input',()=>{clearTimeout(timer);controller?.abort();revision++;criteria();timer=setTimeout(()=>load(),250);});
+ form?.addEventListener('submit',event=>{event.preventDefault();clearTimeout(timer);criteria();load();});more?.addEventListener('click',()=>load(true));
 }
 
 const pinIcon=L.divIcon({className:'qrp-live-pin',html:'●',iconSize:[26,26],iconAnchor:[13,13]});
