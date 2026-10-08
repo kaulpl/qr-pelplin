@@ -8,5 +8,6 @@
 defined('ABSPATH') || exit;
 define('QRP_DIR', plugin_dir_path(__FILE__));
 require_once QRP_DIR . 'includes/core.php';
+require_once QRP_DIR . 'includes/updater.php';
 register_activation_hook(__FILE__, 'qrp_activate');
 register_deactivation_hook(__FILE__, 'qrp_deactivate');
