@@ -30,3 +30,6 @@ Serwer generuje QR automatycznie przy publikacji, również przez REST i WordPre
 
 ## 1.5.2
 QR tylko przy publikacji, jednokrotnie; brak generowania w interfejsie i przez REST. Edycja, ponowna publikacja lub usunięcie plików nie nadpisują kodu. Podgląd pinezki w ciemnym stylu z akcentem zawiera tylko miniaturkę, tytuł i przycisk.
+
+## 1.5.3
+Nagłówek Zobacz na mapie: nad mapą pojedynczego wpisu na wszystkich rozmiarach ekranu.
