@@ -15,3 +15,6 @@ Zwarte wpisy, opis w złotej ramce, galeria z przewijanym popupem, nazwy załąc
 
 ## 1.4.1
 Opis wpisu na pełną szerokość, sama mapa we wpisie, stale widoczna mapa główna ze wszystkimi pinezkami oraz odświeżenie logo nagłówka bez hasła.
+
+## 1.4.2
+Złote separatory i wyróżniki nagłówków materiałów, narożniki kategorii, strzałki kart, wielkie litery kategorii we wpisie i uproszczona stopka. Logo pod nową nazwą pliku i pobieranie lokalizacji bez cache zapobiegają wyświetlaniu starszych danych.

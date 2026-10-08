@@ -69,7 +69,7 @@ function qrp_icon($name) {
 
 // Refresh the requested header identity once; subsequent CMS logo choices remain editable.
 add_action('init',function(){
-    if(get_option('qrp_header_identity_version')==='1.4.1')return;
+    if(get_option('qrp_header_identity_version')==='1.4.2')return;
     $settings=(array)get_option('qrp_settings',[]);$settings['logo']=0;update_option('qrp_settings',$settings);
-    update_option('qrp_header_identity_version','1.4.1');
+    update_option('qrp_header_identity_version','1.4.2');
 },5);

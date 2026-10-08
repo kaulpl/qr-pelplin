@@ -13,7 +13,7 @@ add_action('rest_api_init',function(){
     }]);
     register_rest_route('qr-pelplin/v1','/locations',['methods'=>'GET','permission_callback'=>'__return_true','callback'=>function($r){
         $q=new WP_Query(['post_type'=>'qrp_item','post_status'=>'publish','has_password'=>false,'posts_per_page'=>100,'paged'=>max(1,absint($r['page']??1)),'meta_query'=>[['key'=>'qrp_lat','compare'=>'EXISTS'],['key'=>'qrp_lng','compare'=>'EXISTS']]]);
-        return ['items'=>array_values(array_filter(array_map('qrp_item_data',$q->posts),function($i){return is_numeric($i['lat'])&&is_numeric($i['lng']);})),'pages'=>$q->max_num_pages];
+        $response=new WP_REST_Response(['items'=>array_values(array_filter(array_map('qrp_item_data',$q->posts),function($i){return is_numeric($i['lat'])&&is_numeric($i['lng']);})),'pages'=>$q->max_num_pages]);$response->header('Cache-Control','no-store, no-cache, must-revalidate, max-age=0');return $response;
     }]);
     register_rest_route('qr-pelplin/v1','/stats',['methods'=>'GET','permission_callback'=>'qrp_admin_permission','callback'=>function($r){return qrp_stats($r['days']??30);}]);
     register_rest_route('qr-pelplin/v1','/qr/(?P<id>\d+)',[
