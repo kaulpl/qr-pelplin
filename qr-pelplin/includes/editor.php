@@ -4,13 +4,13 @@ function qrp_editor_permission(){return current_user_can('edit_posts');}
 function qrp_editor_entry($post){
     $id=$post->ID;$sections=get_post_meta($id,'qrp_sections',true);
     if(!is_array($sections)||!$sections)$sections=[['uid'=>'legacy-'.$id,'html'=>$post->post_content]];
-    $asset=function($aid){$file=qrp_media_file($aid);if(!$file)return null;$file['thumbnail']=wp_get_attachment_image_url($aid,'medium')?:'';return $file;};
+    $asset=function($aid)use($id){$file=qrp_media_file($aid,$id);if(!$file)return null;$file['display_name']=$file['title'];$file['thumbnail']=wp_get_attachment_image_url($aid,'medium')?:'';return $file;};
     $terms=wp_get_post_terms($id,'qrp_category',['fields'=>'ids']);
     return ['id'=>$id,'title'=>$post->post_title,'excerpt'=>$post->post_excerpt,'slug'=>$post->post_name,'status'=>$post->post_status,'modified'=>$post->post_modified,'sections'=>$sections,'categories'=>is_wp_error($terms)?[]:$terms,
         'thumbnail'=>get_post_thumbnail_id($id)?$asset(get_post_thumbnail_id($id)):null,
         'gallery'=>array_values(array_filter(array_map($asset,qrp_clean_gallery(get_post_meta($id,'qrp_gallery',true))))),
         'attachments'=>array_values(array_filter(array_map($asset,array_values(array_unique(array_merge(qrp_entry_files($id),array_filter([absint(get_post_meta($id,'qrp_audio',true)),absint(get_post_meta($id,'qrp_video',true))]))))))),
-        'primary'=>qrp_primary_file($id),'delivery'=>get_post_meta($id,'qrp_delivery',true)?:'auto',
+        'primary'=>qrp_primary_file($id)?$asset(qrp_primary_file($id)['id']):null,'delivery'=>get_post_meta($id,'qrp_delivery',true)?:'auto',
         'lat'=>get_post_meta($id,'qrp_lat',true),'lng'=>get_post_meta($id,'qrp_lng',true),'address'=>get_post_meta($id,'qrp_address',true),'url'=>$post->post_status==='publish'?get_permalink($id):get_preview_post_link($post),
         'qr_png'=>wp_get_attachment_url(get_post_meta($id,'qrp_qr_png',true))?:'','qr_svg'=>wp_get_attachment_url(get_post_meta($id,'qrp_qr_svg',true))?:''];
 }
@@ -26,11 +26,12 @@ function qrp_editor_save($request){
     if(($lat!==''||$lng!=='')&&(!is_numeric($lat)||!is_numeric($lng)||abs((float)$lat)>90||abs((float)$lng)>180))return new WP_Error('qrp_location','Wybierz prawidłowy punkt na mapie.',['status'=>400]);
     $categories=array_values(array_unique(array_map('absint',is_array($data['categories']??null)?$data['categories']:[])));
     foreach($categories as $term)if(!term_exists($term,'qrp_category'))return new WP_Error('qrp_category','Wybrana kategoria nie istnieje.',['status'=>400]);
-    $args=['post_type'=>'qrp_item','post_title'=>$title,'post_excerpt'=>sanitize_textarea_field($data['excerpt']??''),'post_content'=>$html,'post_status'=>$status];if($id)$args['ID']=$id;else$args['post_author']=get_current_user_id();
+    $args=['post_type'=>'qrp_item','post_title'=>$title,'post_excerpt'=>wp_kses_post($data['excerpt']??''),'post_content'=>$html,'post_status'=>$status];if($id)$args['ID']=$id;else$args['post_author']=get_current_user_id();
     if(isset($data['slug'])&&$data['slug']!=='')$args['post_name']=sanitize_title($data['slug']);
     $saved=wp_insert_post(wp_slash($args),true);if(is_wp_error($saved))return $saved;
     update_post_meta($saved,'qrp_sections',$sections);
     foreach(['gallery'=>'qrp_gallery','attachments'=>'qrp_attachments'] as $input=>$key){$ids=array_map(function($asset){return absint(is_array($asset)?($asset['id']??0):$asset);},is_array($data[$input]??null)?$data[$input]:[]);update_post_meta($saved,$key,$input==='gallery'?qrp_clean_gallery($ids):qrp_clean_attachments($ids));}
+    $labels=[];foreach(array_merge(is_array($data['attachments']??null)?$data['attachments']:[],isset($data['primary'])?[$data['primary']]:[]) as $asset){if(is_array($asset)&&qrp_media_file(absint($asset['id']??0))){$label=sanitize_text_field($asset['display_name']??'');if($label!=='')$labels[absint($asset['id'])]=$label;}}update_post_meta($saved,'qrp_file_labels',$labels);
     // Old document pages are merged into the new attachment list on load.
     delete_post_meta($saved,'qrp_documents');delete_post_meta($saved,'qrp_audio');delete_post_meta($saved,'qrp_video');
     $primary=is_array($data['primary']??null)?absint($data['primary']['id']??0):0;update_post_meta($saved,'qrp_primary_file',qrp_clean_primary_file($primary));

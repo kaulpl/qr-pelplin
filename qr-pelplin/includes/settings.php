@@ -29,7 +29,7 @@ function qrp_clean_link($url) {
 }
 function qrp_sanitize_settings($input) {
     $old = qrp_settings(); $out = $old;
-    foreach (['brand','hero_eyebrow','hero_title','hero_text','hero_button','categories_title','content_title','map_title','map_text','about_title','about_text','footer_text','copyright'] as $k) if (isset($input[$k])) $out[$k] = sanitize_textarea_field(substr((string)$input[$k], 0, 5000));
+    foreach (['brand','hero_eyebrow','hero_title','hero_text','hero_button','categories_title','content_title','map_title','map_text','about_title','about_text','footer_text','copyright'] as $k) if (isset($input[$k])) $out[$k] = in_array($k,['hero_text','map_text','about_text','footer_text'],true)?wp_kses_post(substr((string)$input[$k],0,5000)):sanitize_textarea_field(substr((string)$input[$k],0,5000));
     foreach (['logo','footer_logo','hero_image','map_image','about_image'] as $k) if (isset($input[$k])) {
         $id=absint($input[$k]); $out[$k] = $id && wp_attachment_is_image($id) ? $id : 0;
     }

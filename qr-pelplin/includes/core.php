@@ -4,9 +4,9 @@ function qrp_register() {
     register_post_type('qrp_item', [
         'labels'=>['name'=>'Treści QR','singular_name'=>'Treść QR','add_new_item'=>'Dodaj treść QR','edit_item'=>'Edytuj treść QR'],
         'public'=>true,'show_in_rest'=>true,'show_in_menu'=>false,'menu_icon'=>'dashicons-location-alt',
-        'supports'=>['title','editor','excerpt','thumbnail','revisions','page-attributes'], 'rewrite'=>['slug'=>'q','with_front'=>false], 'has_archive'=>false,
+        'supports'=>['title','editor','excerpt','thumbnail','revisions','page-attributes'], 'rewrite'=>['slug'=>'w','with_front'=>false], 'has_archive'=>false,
     ]);
-    register_taxonomy('qrp_category',['qrp_item'],['label'=>'Kategorie QR','public'=>true,'hierarchical'=>true,'show_in_rest'=>true,'rewrite'=>['slug'=>'kategoria-qr']]);
+    register_taxonomy('qrp_category',['qrp_item'],['label'=>'Kategorie QR','public'=>true,'hierarchical'=>true,'show_in_rest'=>true,'rewrite'=>['slug'=>'k','with_front'=>false]]);
     foreach (['qrp_lat','qrp_lng','qrp_address','qrp_featured','qrp_audio','qrp_video','qrp_qr_png','qrp_qr_svg'] as $key) register_post_meta('qrp_item',$key,[
         'single'=>true, 'type'=>in_array($key,['qrp_audio','qrp_video','qrp_qr_png','qrp_qr_svg'],true)?'integer':'string',
         'show_in_rest'=>true, 'sanitize_callback'=>in_array($key,['qrp_audio','qrp_video','qrp_qr_png','qrp_qr_svg'],true)?'absint':'sanitize_text_field',
@@ -38,7 +38,7 @@ function qrp_token($id) {
     }
     return $token;
 }
-function qrp_scan_url($id) { return add_query_arg('qrp_code',qrp_token($id),home_url('/')); }
+function qrp_scan_url($id) { return get_option('permalink_structure') ? home_url('/q/'.qrp_token($id).'/') : add_query_arg('qrp_code',qrp_token($id),home_url('/')); }
 function qrp_template($file,$vars=[]) { extract($vars,EXTR_SKIP); ob_start(); include QRP_DIR.'templates/'.$file.'.php'; return ob_get_clean(); }
 add_shortcode('qr_pelplin_landing',function(){return qrp_template('landing',['s'=>qrp_settings()]);});
 add_filter('template_include',function($template){
@@ -49,6 +49,7 @@ add_filter('template_include',function($template){
 function qrp_is_portal() { $s=qrp_settings(); return isset($_GET['qrp_credits']) || is_singular('qrp_item') || is_tax('qrp_category') || ($s['landing_page'] && is_page($s['landing_page'])) || (is_singular() && has_shortcode(get_post()->post_content??'','qr_pelplin_landing')); }
 add_action('wp_enqueue_scripts',function(){
     if (!qrp_is_portal()) return;
+    wp_enqueue_style('qrp-map-style',QRP_URL.'assets/dist/public.css',[],QRP_VERSION);
     wp_enqueue_style('qrp-public',QRP_URL.'assets/public.css',[],QRP_VERSION);
     wp_enqueue_script('qrp-public',QRP_URL.'assets/dist/public.js',[],QRP_VERSION,true);
     wp_localize_script('qrp-public','qrpPublic',['api'=>rest_url('qr-pelplin/v1/'),'landing'=>qrp_landing_url(),'pdfAssets'=>QRP_URL.'assets/vendor/']);
@@ -101,3 +102,18 @@ function qrp_category_image($term,$settings=null){
 function qrp_default_category_images(){
     $out=[];$terms=get_terms(['taxonomy'=>'qrp_category','hide_empty'=>false]);if(!is_wp_error($terms))foreach($terms as $term)$out[$term->term_id]=qrp_category_image($term,qrp_defaults());return $out;
 }
+
+add_filter('query_vars',function($vars){$vars[]='qrp_code';$vars[]='qrp_legacy';return $vars;});
+add_action('init',function(){
+    add_rewrite_rule('^q/([a-f0-9]{24})/?$','index.php?qrp_code=$matches[1]','top');
+    add_rewrite_rule('^q/([^/]+)/?$','index.php?post_type=qrp_item&name=$matches[1]&qrp_legacy=1','bottom');
+    add_rewrite_rule('^kategoria-qr/(.+?)/page/([0-9]+)/?$','index.php?qrp_category=$matches[1]&paged=$matches[2]&qrp_legacy=1','top');
+    add_rewrite_rule('^kategoria-qr/(.+?)/?$','index.php?qrp_category=$matches[1]&qrp_legacy=1','top');
+},20);
+add_action('template_redirect',function(){
+    if(!get_query_var('qrp_legacy') || is_404())return;
+    $url=is_singular('qrp_item')?get_permalink():get_term_link(get_queried_object());
+    if(is_wp_error($url))return;
+    if(is_tax('qrp_category')&&get_query_var('paged')>1)$url=trailingslashit($url).'page/'.absint(get_query_var('paged')).'/';
+    wp_safe_redirect($url,301);exit;
+},1);

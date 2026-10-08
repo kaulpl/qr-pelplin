@@ -1,4 +1,4 @@
-# QR Pelplin 1.3.0
+# QR Pelplin 1.4.0
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 
@@ -48,9 +48,9 @@ Domyślne logo łączy przekazany znak Pelplina z dekoracyjnym symbolem QR w kol
 
 ## Stałe kody i statystyki
 
-QR koduje `https://twoja-domena/?qrp_code=stały-token`, a nie zmienny slug wpisu. Przekierowanie 302 prowadzi zawsze do aktualnego permalinku. Zmiana tytułu, slugu lub treści nie wymaga ponownego wydruku. Domena i token muszą pozostać niezmienione; po migracji domeny utrzymuj przekierowanie starej domeny. Nie usuwaj wpisów, których kody są wydrukowane. Niedostępna lub usunięta treść zwraca komunikat i HTTP 410.
+QR koduje `https://twoja-domena/q/stały-token/`, a nie zmienny slug wpisu. Przekierowanie 302 prowadzi zawsze do aktualnego permalinku. Zmiana tytułu, slugu lub treści nie wymaga ponownego wydruku. Domena i token muszą pozostać niezmienione; po migracji domeny utrzymuj przekierowanie starej domeny. Nie usuwaj wpisów, których kody są wydrukowane. Niedostępna lub usunięta treść zwraca komunikat i HTTP 410.
 
-**Wyklucz adresy z parametrem `qrp_code` lub `qrp_download` z cache/CDN**. Warstwa cache działająca przed PHP może ominąć naliczanie i przekierowanie. Odsłony treści są liczone przez AJAX, również gdy HTML strony pochodzi z cache.
+**Wyklucz adresy /q/* oraz adresy z parametrem `qrp_code` lub `qrp_download` z cache/CDN**. Warstwa cache działająca przed PHP może ominąć naliczanie i przekierowanie. Odsłony treści są liczone przez AJAX, również gdy HTML strony pochodzi z cache.
 
 Panel pokazuje wejścia przez adres QR, odsłony treści, wykres, ranking, zakres 7/30/90/365 dni i eksport dziennych danych CSV. To pomiar otwarcia linku; samo rozpoznanie kodu przez aparat bez otwarcia strony jest niewidoczne. Otwarcie ręcznie skopiowanego linku QR też jest liczone jako wejście QR. Odsłony zawierają również wizyty po QR.
 
@@ -93,3 +93,6 @@ QR Pelplin → Treści QR otwiera własny panel listy i edytor w stylu CMS wtycz
 Hero jest krótsze, bez współrzędnych, regionu i numeru sekcji. Kategorie mają jeszcze krótsze hero z tą samą grafiką co miniatura, bez modułu skrótów i bez nagłówka nad wyszukiwarką. Logo nie ma sloganu. Autor zdjęcia domyślnego i licencja są dostępne na stronie Materiały i licencje, zamiast w stopce.
 
 Cztery domyślne grafiki kategorii są realistycznymi ilustracjami AI inspirowanymi Pelplinem, wygenerowanymi przez wbudowane image_gen. Nie przedstawiają dokumentalnych zdjęć ani konkretnych rzeczywistych wydarzeń. Pakiet zawiera zoptymalizowane pliki WebP w qr-pelplin/assets/categories/. Pełne prompty są w docs/category-image-prompts.json. Własne zdjęcia wybrane w CMS mają pierwszeństwo.
+
+## Wpisy i adresy (1.4.0)
+Wpisy używają /w/slug/, kategorie /k/slug/, QR /q/token/. Dawne adresy wpisów i kategorii przekierowują, a QR z parametrem qrp_code nadal działa. Galerie mają popup z przewijaniem, załączniki własne nazwy, opisy formatowanie, a mapy pinezki z podglądem historii.

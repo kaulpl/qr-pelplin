@@ -1,10 +1,10 @@
 <?php
 defined('ABSPATH') || exit;
-function qrp_media_file($id){
+function qrp_media_file($id, $entry_id=0){
     $id=absint($id);$post=get_post($id);$mime=get_post_mime_type($id)?:'';
     if(!$post || $post->post_type!=='attachment' || $post->post_status==='trash' || !in_array($mime,['application/pdf','image/jpeg','image/png','image/webp','image/gif','audio/mpeg','audio/mp3','audio/ogg','audio/wav','audio/x-wav','audio/flac','video/mp4','video/webm','text/plain','text/csv','application/zip','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],true))return false;
     $url=wp_get_attachment_url($id);if(!$url || !in_array(wp_parse_url($url,PHP_URL_SCHEME),['http','https'],true))return false;
-    return ['id'=>$id,'mime'=>$mime,'url'=>$url,'title'=>get_the_title($id),'type'=>str_starts_with($mime,'audio/')?'audio':(str_starts_with($mime,'video/')?'video':($mime==='application/pdf'?'pdf':(str_starts_with($mime,'image/')?'image':'file')))];
+    return ['id'=>$id,'mime'=>$mime,'url'=>$url,'title'=>($entry_id ? (get_post_meta($entry_id,'qrp_file_labels',true)[$id]??get_the_title($id)) : get_the_title($id)),'type'=>str_starts_with($mime,'audio/')?'audio':(str_starts_with($mime,'video/')?'video':($mime==='application/pdf'?'pdf':(str_starts_with($mime,'image/')?'image':'file')))];
 }
 function qrp_clean_primary_file($id){return qrp_media_file($id)?absint($id):0;}
 function qrp_clean_media_ids($ids,$types){
@@ -67,13 +67,13 @@ add_action('template_redirect',function(){
 function qrp_render_file($file,$autoplay=false){
     if(!$file)return;
     if($file['type']==='audio'){
-        echo '<section class="qrp-audio-player"><h2>'.esc_html($file['title']?:'Posłuchaj opowieści').'</h2><audio controls preload="metadata" '.($autoplay?'autoplay data-qrp-autoplay':'').' src="'.esc_url($file['url']).'"></audio><p data-audio-hint>Naciśnij odtwarzanie, aby posłuchać nagrania.</p></section>';
+        echo '<section class="qrp-audio-player"><h2>'.esc_html((in_array($file['mime'],['audio/mpeg','audio/mp3'],true)?'MP3: ':'Audio: ').($file['title']?:'Posłuchaj opowieści')).'</h2><audio controls preload="metadata" '.($autoplay?'autoplay data-qrp-autoplay':'').' src="'.esc_url($file['url']).'"></audio><p data-audio-hint>Naciśnij odtwarzanie, aby posłuchać nagrania.</p></section>';
     }elseif($file['type']==='video'){
         echo '<section class="qrp-video-player"><h2>'.esc_html($file['title']).'</h2><video controls preload="metadata" src="'.esc_url($file['url']).'"></video></section>';
     }elseif($file['type']==='image'){
         echo '<figure class="qrp-document-page"><img src="'.esc_url($file['url']).'" alt="'.esc_attr($file['title']).'" loading="lazy"><figcaption>'.esc_html($file['title']).'</figcaption></figure>';
     }elseif($file['type']==='pdf'){
-        echo '<section class="qrp-document-page"><h2>'.esc_html($file['title']).'</h2><div class="qrp-pdf-viewer" data-pdf-viewer data-pdf-url="'.esc_url($file['url']).'"><div class="qrp-pdf-toolbar"><button type="button" class="qrp-outline" data-pdf-prev disabled aria-label="Poprzednia strona">←</button><label>Strona <input type="number" min="1" value="1" data-pdf-page aria-label="Numer strony PDF"></label><span data-pdf-counter></span><button type="button" class="qrp-outline" data-pdf-next disabled aria-label="Następna strona">→</button></div><p data-pdf-status role="status">Otwieranie PDF…</p><div class="qrp-pdf-sheet" data-pdf-sheet><canvas role="img" aria-label="Podgląd PDF"></canvas></div><details class="qrp-pdf-text"><summary>Tekst strony</summary><p data-pdf-text></p></details></div><p><a class="qrp-text-link" href="'.esc_url($file['url']).'" target="_blank" rel="noopener">Otwórz PDF w osobnym oknie ↗</a></p><noscript><object data="'.esc_url($file['url']).'" type="application/pdf" class="qrp-pdf"><a href="'.esc_url($file['url']).'">Otwórz PDF</a></object></noscript></section>';
+        echo '<section class="qrp-document-page"><h2>'.esc_html('PDF: '.$file['title']).'</h2><div class="qrp-pdf-viewer" data-pdf-viewer data-pdf-url="'.esc_url($file['url']).'"><div class="qrp-pdf-toolbar"><button type="button" class="qrp-outline" data-pdf-prev disabled aria-label="Poprzednia strona">←</button><label>Strona <input type="number" min="1" value="1" data-pdf-page aria-label="Numer strony PDF"></label><span data-pdf-counter></span><button type="button" class="qrp-outline" data-pdf-next disabled aria-label="Następna strona">→</button></div><p data-pdf-status role="status">Otwieranie PDF…</p><div class="qrp-pdf-sheet" data-pdf-sheet><canvas role="img" aria-label="Podgląd PDF"></canvas></div><details class="qrp-pdf-text"><summary>Tekst strony</summary><p data-pdf-text></p></details></div><p><a class="qrp-text-link" href="'.esc_url($file['url']).'" target="_blank" rel="noopener">Otwórz PDF w osobnym oknie ↗</a></p><noscript><object data="'.esc_url($file['url']).'" type="application/pdf" class="qrp-pdf"><a href="'.esc_url($file['url']).'">Otwórz PDF</a></object></noscript></section>';
     }else{
         echo '<section class="qrp-file-download"><h2>'.esc_html($file['title']).'</h2><a class="qrp-button" href="'.esc_url($file['url']).'" download>Pobierz plik ↓</a></section>';
     }

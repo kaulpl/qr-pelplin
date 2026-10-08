@@ -42,11 +42,11 @@ function qrp_record($id,$kind) {
     $wpdb->query($wpdb->prepare("INSERT INTO {$wpdb->prefix}qrp_stats (post_id,day,kind,hits,visitors) VALUES (%d,%s,%s,1,%d) ON DUPLICATE KEY UPDATE hits=hits+1,visitors=visitors+VALUES(visitors)",$id,$day,$kind,$new?1:0));
 }
 add_action('template_redirect',function(){
-    if (!isset($_GET['qrp_code'])) return;
+    if (!isset($_GET['qrp_code']) && !get_query_var('qrp_code')) return;
     nocache_headers();
     header('X-Robots-Tag: noindex, nofollow'); header('Referrer-Policy: same-origin');
     if (($_SERVER['REQUEST_METHOD']??'GET')!=='GET') {status_header(405); exit;}
-    $token=sanitize_text_field(wp_unslash($_GET['qrp_code']));
+    $token=sanitize_text_field(wp_unslash($_GET['qrp_code']??get_query_var('qrp_code')));
     if (!preg_match('/^[a-f0-9]{24}$/',$token)) wp_die('Nieprawidłowy kod QR.','Kod QR',['response'=>404]);
     $posts=get_posts(['post_type'=>'qrp_item','post_status'=>'publish','numberposts'=>1,'meta_key'=>'qrp_token','meta_value'=>$token,'has_password'=>false]);
     if (!$posts) wp_die('Ta treść jest obecnie niedostępna. Skontaktuj się z administratorem portalu.','Treść QR niedostępna',['response'=>410]);

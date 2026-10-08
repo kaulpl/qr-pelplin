@@ -9,3 +9,6 @@
 * Cztery realistyczne ilustracje AI inspirowane Pelplinem jako domyślne grafiki kategorii. Własne zdjęcia z CMS mają pierwszeństwo.
 
 Aktualizacja: QR Pelplin → Wygląd i CMS → Aktualizacje albo instalacja ZIP w WordPressie. Wymagania: WordPress 6.6+, PHP 8.0+. Grafiki AI są ilustracjami, nie dokumentalnymi fotografiami miasta ani konkretnych wydarzeń.
+
+## 1.4.0
+Zwarte wpisy, opis w złotej ramce, galeria z przewijanym popupem, nazwy załączników, mapy wszystkich miejsc i pojedynczych wpisów, opisy rich text z akcentem oraz adresy /k/, /w/, /q/ z zachowaniem starych linków.
