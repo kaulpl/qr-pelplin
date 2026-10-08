@@ -1,4 +1,4 @@
-# QR Pelplin 1.5.1
+# QR Pelplin 1.5.2
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 
@@ -9,7 +9,7 @@ Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści 
 3. QR Pelplin → Wygląd i CMS: wybierz logo, zdjęcia, teksty, menu, kolory, sekcje i ich kolejność.
 4. Aktywacja utworzy stronę „Odkrywaj Pelplin”. Ustaw ją jako stronę główną w Ustawienia → Czytanie, jeśli chcesz.
 5. QR Pelplin → Treści QR: dodaj historię, kategorię, zdjęcie wyróżniające, opcjonalnie współrzędne i multimedia. **Opublikuj wpis**.
-6. W panelu wpisu kliknij **Wygeneruj i dołącz QR**. Pobierz SVG do druku lub PNG do publikacji. Oba pliki zostaną dołączone do wpisu w bibliotece mediów. Opcjonalnie wstaw obraz QR do treści i zapisz wpis.
+6. Po publikacji kod QR powstaje automatycznie, tylko raz. Pobierz SVG lub PNG w panelu wpisu albo zakładce Kody QR. Możesz zmieniać docelową treść, zachowując kod.
 7. Przed drukiem zeskanuj kod na telefonie i sprawdź docelową treść.
 
 Wymagania: WordPress 6.6+, PHP 8.0+, HTTPS zalecane, zapisywalny katalog uploads. SVG jest tworzony wyłącznie przez generator; wtyczka nie odblokowuje dowolnych uploadów SVG. Treści są publiczne — QR jest sposobem na wejście, a nie zabezpieczeniem dostępu.

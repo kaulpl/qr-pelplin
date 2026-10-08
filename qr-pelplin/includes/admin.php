@@ -30,14 +30,12 @@ add_action('admin_enqueue_scripts',function($hook){
     $screen=get_current_screen();
     if($screen && $screen->post_type==='qrp_item' && in_array($hook,['post.php','post-new.php'],true)){
         wp_enqueue_media();wp_enqueue_style('qrp-editor',QRP_URL.'assets/editor.css',[],QRP_VERSION);wp_enqueue_style('qrp-location',QRP_URL.'assets/dist/location.css',[],QRP_VERSION);wp_enqueue_script('qrp-location',QRP_URL.'assets/dist/location.js',[],QRP_VERSION,true);wp_enqueue_script('qrp-media',QRP_URL.'assets/dist/media.js',[],QRP_VERSION,true);
-        wp_enqueue_script('qrp-qr',QRP_URL.'assets/dist/qr.js',['wp-data','wp-blocks'],QRP_VERSION,true);
-        wp_localize_script('qrp-qr','qrpQR',['api'=>rest_url('qr-pelplin/v1/'),'nonce'=>wp_create_nonce('wp_rest')]);
     }
 });
 add_action('add_meta_boxes',function(){
     add_meta_box('qrp-qr-box','Kod QR — stały adres',function($post){
         $png=wp_get_attachment_url(get_post_meta($post->ID,'qrp_qr_png',true));
-        echo '<div id="qrp-generator" data-id="'.absint($post->ID).'"><p>Kod prowadzi do tej treści i zachowuje adres po zmianie jej tytułu. Przed drukiem opublikuj wpis.</p><button type="button" class="button button-primary" data-generate>Wygeneruj i dołącz QR</button><p><label><input type="checkbox" data-insert> Wstaw także obraz QR do treści</label></p><p data-status role="status"></p><div data-preview>';
+        echo '<div id="qrp-generator" data-id="'.absint($post->ID).'"><p>Kod powstaje automatycznie przy publikacji i nie może zostać wygenerowany ponownie. Przypisanie zmienisz w zakładce Kody QR.</p><div data-preview>';
         if($png) echo '<img src="'.esc_url($png).'" alt="Kod QR" style="max-width:180px;width:100%">';
         echo '</div><p data-downloads>';
         foreach(['svg','png'] as $f){$url=wp_get_attachment_url(get_post_meta($post->ID,'qrp_qr_'.$f,true));if($url) echo '<a class="button" href="'.esc_url($url).'" download>Pobierz '.esc_html(strtoupper($f)).'</a> ';}

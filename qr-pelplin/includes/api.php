@@ -18,7 +18,6 @@ add_action('rest_api_init',function(){
     register_rest_route('qr-pelplin/v1','/stats',['methods'=>'GET','permission_callback'=>'qrp_admin_permission','callback'=>function($r){return qrp_stats($r['days']??30);}]);
     register_rest_route('qr-pelplin/v1','/qr/(?P<id>\d+)',[
         ['methods'=>'GET','permission_callback'=>'qrp_edit_permission','callback'=>function($r){$id=absint($r['id']);return ['url'=>qrp_scan_url($id),'title'=>get_the_title($id),'size'=>qrp_settings()['qr_size'],'png'=>wp_get_attachment_url(get_post_meta($id,'qrp_qr_png',true)),'svg'=>wp_get_attachment_url(get_post_meta($id,'qrp_qr_svg',true))];}],
-        ['methods'=>'POST','permission_callback'=>'qrp_edit_permission','callback'=>'qrp_save_qr'],
     ]);
     register_rest_route('qr-pelplin/v1','/view/(?P<id>\d+)',['methods'=>'POST','permission_callback'=>'__return_true','callback'=>function($r){
         $post=get_post(absint($r['id']));
@@ -38,7 +37,9 @@ function qrp_svg_from_matrix($matrix) {
 }
 function qrp_save_qr($r) {
     $id=absint($r['id']); $data=(array)$r->get_json_params();
-    if (($data['url']??'')!==qrp_scan_url($id)) return new WP_Error('qrp_url','Adres QR zmienił się. Wygeneruj kod ponownie.',['status'=>409]);
+    if(get_post_type($id)!=='qrp_item'||get_post_status($id)!=='publish')return new WP_Error('qrp_unpublished','QR powstaje dopiero po publikacji.',['status'=>400]);
+    if(get_post_meta($id,'qrp_qr_issued',true)||get_post_meta($id,'qrp_qr_png',true)||get_post_meta($id,'qrp_qr_svg',true))return new WP_Error('qrp_immutable','Kod QR został już utworzony. Można zmienić tylko docelową treść.',['status'=>409]);
+    if (($data['url']??'')!==qrp_scan_url($id)) return new WP_Error('qrp_url','Adres QR nie odpowiada stałemu adresowi wpisu.',['status'=>409]);
     $matrix=$data['matrix']??[];
     $svg=is_array($matrix)?qrp_svg_from_matrix($matrix):false;
     $pngstring=$data['png']??'';
@@ -67,7 +68,7 @@ function qrp_save_qr($r) {
         $result[$format]=['id'=>$aid,'url'=>$upload['url']];
     }
     foreach($result as $format=>$asset) update_post_meta($id,'qrp_qr_'.$format,$asset['id']);
-    // Preserve earlier attachments: their URLs may already be embedded in published content.
+    update_post_meta($id,'qrp_qr_issued',time());
     return $result;
 }
 add_action('admin_post_qrp_export',function(){

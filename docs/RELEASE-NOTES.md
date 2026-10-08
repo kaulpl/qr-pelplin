@@ -27,3 +27,6 @@ Rejestr kodów QR z pobieraniem SVG/PNG i zmianą docelowej treści bez zmiany w
 
 ## 1.5.1
 Serwer generuje QR automatycznie przy publikacji, również przez REST i WordPress. Kod na dole wpisu dopasowany do komputera, tabletu i telefonu. Jedno pole wyboru docelowej treści z bieżącym przypisaniem i zapisem po zmianie.
+
+## 1.5.2
+QR tylko przy publikacji, jednokrotnie; brak generowania w interfejsie i przez REST. Edycja, ponowna publikacja lub usunięcie plików nie nadpisują kodu. Podgląd pinezki w ciemnym stylu z akcentem zawiera tylko miniaturkę, tytuł i przycisk.

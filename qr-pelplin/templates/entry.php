@@ -11,5 +11,5 @@
 <?php foreach(['audio','video'] as $type){$asset=(int)get_post_meta($id,'qrp_'.$type,true);if($file && $asset===$file['id'])continue;$url=$asset?wp_get_attachment_url($asset):'';if($url && str_starts_with(get_post_mime_type($asset)?:'',$type.'/'))echo '<'.$type.' controls preload="metadata" src="'.esc_url($url).'"></'.$type.'>';} ?>
 <?php endif; endif; ?>
 <?php $lat=get_post_meta($id,'qrp_lat',true);$lng=get_post_meta($id,'qrp_lng',true);if(is_numeric($lat)&&is_numeric($lng)): ?><aside class="qrp-entry-location"><div class="qrp-live-map" data-entry-map data-lat="<?php echo esc_attr($lat); ?>" data-lng="<?php echo esc_attr($lng); ?>" aria-label="Mapa miejsca"></div></aside><?php endif; ?>
-<?php $qr=qrp_ensure_qr($id);$qr_image=wp_get_attachment_url(get_post_meta($id,'qrp_qr_png',true));if(!is_wp_error($qr)&&$qr_image): ?><figure class="qrp-entry-qr"><img src="<?php echo esc_url($qr_image); ?>" alt="Kod QR do tej treści" loading="lazy"><figcaption>Zeskanuj kod QR</figcaption></figure><?php endif; ?>
+<?php $qr_image=wp_get_attachment_url(get_post_meta($id,'qrp_qr_png',true));if($qr_image): ?><figure class="qrp-entry-qr"><img src="<?php echo esc_url($qr_image); ?>" alt="Kod QR do tej treści" loading="lazy"><figcaption>Zeskanuj kod QR</figcaption></figure><?php endif; ?>
 <?php endif; ?></article>
