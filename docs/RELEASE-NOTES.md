@@ -12,3 +12,6 @@ Aktualizacja: QR Pelplin → Wygląd i CMS → Aktualizacje albo instalacja ZIP 
 
 ## 1.4.0
 Zwarte wpisy, opis w złotej ramce, galeria z przewijanym popupem, nazwy załączników, mapy wszystkich miejsc i pojedynczych wpisów, opisy rich text z akcentem oraz adresy /k/, /w/, /q/ z zachowaniem starych linków.
+
+## 1.4.1
+Opis wpisu na pełną szerokość, sama mapa we wpisie, stale widoczna mapa główna ze wszystkimi pinezkami oraz odświeżenie logo nagłówka bez hasła.

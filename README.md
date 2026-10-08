@@ -1,4 +1,4 @@
-# QR Pelplin 1.4.0
+# QR Pelplin 1.4.1
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 
@@ -94,5 +94,5 @@ Hero jest krótsze, bez współrzędnych, regionu i numeru sekcji. Kategorie maj
 
 Cztery domyślne grafiki kategorii są realistycznymi ilustracjami AI inspirowanymi Pelplinem, wygenerowanymi przez wbudowane image_gen. Nie przedstawiają dokumentalnych zdjęć ani konkretnych rzeczywistych wydarzeń. Pakiet zawiera zoptymalizowane pliki WebP w qr-pelplin/assets/categories/. Pełne prompty są w docs/category-image-prompts.json. Własne zdjęcia wybrane w CMS mają pierwszeństwo.
 
-## Wpisy i adresy (1.4.0)
+## Wpisy i adresy (1.4.1)
 Wpisy używają /w/slug/, kategorie /k/slug/, QR /q/token/. Dawne adresy wpisów i kategorii przekierowują, a QR z parametrem qrp_code nadal działa. Galerie mają popup z przewijaniem, załączniki własne nazwy, opisy formatowanie, a mapy pinezki z podglądem historii.

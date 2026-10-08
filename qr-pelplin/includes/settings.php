@@ -66,3 +66,10 @@ function qrp_icon($name) {
     $paths=['crown'=>'M3 7l4 4 5-8 5 8 4-4-3 12H6L3 7zm3 15h12','map'=>'M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2V5zm6-2v16m6-14v16','image'=>'M3 3h18v18H3V3zm0 15 6-7 4 5 3-4 5 6M8 7h.01','people'=>'M16 21v-4a4 4 0 0 0-8 0v4M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8m8 18v-3a4 4 0 0 0-3-4M4 21v-3a4 4 0 0 1 3-4','book'=>'M12 5v16M3 3c4 0 6 0 9 2 3-2 5-2 9-2v16c-4 0-6 0-9 2-3-2-5-2-9-2V3z','pin'=>'M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0zm-8-3a3 3 0 1 0 0 6 3 3 0 0 0 0-6'];
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><path d="'.esc_attr($paths[$name]??$paths['pin']).'"/></svg>';
 }
+
+// Refresh the requested header identity once; subsequent CMS logo choices remain editable.
+add_action('init',function(){
+    if(get_option('qrp_header_identity_version')==='1.4.1')return;
+    $settings=(array)get_option('qrp_settings',[]);$settings['logo']=0;update_option('qrp_settings',$settings);
+    update_option('qrp_header_identity_version','1.4.1');
+},5);
