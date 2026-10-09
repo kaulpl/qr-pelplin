@@ -54,3 +54,6 @@ Podpis obrazu z biblioteki mediów jest prezentowany jako autor / źródło pod 
 
 ## 1.7.5
 Zdjęcia w proporcjach 2:3 z centralnym kadrowaniem: karty, kategorie, galeria, treść, podgląd, mapa i CMS. Tło hero w pionowym kadrze przy zachowaniu zwartego nagłówka. Oryginalne pliki, logo i kody QR pozostają bez zmian.
+
+## 1.7.6
+Zdjęcia związane z wpisami w poziomych proporcjach 3:2: treść, miniatury wpisów, galerie, mapa i podgląd. Hero, kafelki kategorii i pozostałe grafiki przywrócone do wyglądu sprzed zmian proporcji.
