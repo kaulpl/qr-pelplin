@@ -18,6 +18,7 @@ add_action('admin_enqueue_scripts',function($hook){
         wp_localize_script('qrp-admin','qrpAdmin',[
             'dnsHost'=>wp_parse_url(home_url(),PHP_URL_HOST),
             'seoExternal'=>qrp_seo_external(),'wpIndexing'=>(bool)get_option('blog_public'),'sitemap'=>home_url('/wp-sitemap.xml'),
+            'siteLogo'=>qrp_thumbnail_logo(),
             'systemLogo'=>QRP_URL.'assets/pelplin-qr.svg','defaultCategoryImages'=>qrp_default_category_images(),
             'api'=>rest_url('qr-pelplin/v1/'),'nonce'=>wp_create_nonce('wp_rest'),'settings'=>$s,
             'canCategories'=>current_user_can('manage_categories'),'canManage'=>current_user_can('manage_options'),'canPublish'=>current_user_can('publish_posts'),'entryId'=>absint($_GET['item']??0),'newEntry'=>isset($_GET['new']),

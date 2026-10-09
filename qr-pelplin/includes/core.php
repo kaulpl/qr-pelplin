@@ -60,10 +60,11 @@ add_action('wp_enqueue_scripts',function(){
     $s=qrp_settings();
     wp_add_inline_style('qrp-public',':root{--qrp-accent:'.sanitize_hex_color($s['accent']).';--qrp-bg:'.sanitize_hex_color($s['background']).';--qrp-text:'.sanitize_hex_color($s['text_color']).';}');
 });
+function qrp_thumbnail_logo(){return qrp_image(qrp_settings()['logo'],'large')?:QRP_URL.'assets/pelplin-qr-mark.svg';}
 function qrp_item_data($post) {
     $terms=wp_get_post_terms($post->ID,'qrp_category');
     $image=get_the_post_thumbnail_url($post,'large');
-    return ['id'=>$post->ID,'title'=>get_the_title($post),'url'=>qrp_target_url($post),'excerpt'=>wp_strip_all_tags(get_the_excerpt($post)), 'image'=>$image?:QRP_URL.'assets/place.svg',
+    return ['id'=>$post->ID,'title'=>get_the_title($post),'url'=>qrp_target_url($post),'excerpt'=>wp_strip_all_tags(get_the_excerpt($post)), 'image'=>$image?:qrp_thumbnail_logo(),'image_is_logo'=>!$image,
         'categories'=>is_wp_error($terms)?[]:array_map(function($term){return ['id'=>$term->term_id,'name'=>$term->name];},$terms),
         'lat'=>get_post_meta($post->ID,'qrp_lat',true),'lng'=>get_post_meta($post->ID,'qrp_lng',true),'address'=>get_post_meta($post->ID,'qrp_address',true)];
 }

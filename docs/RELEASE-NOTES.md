@@ -45,3 +45,6 @@ Po udanym zapisie edytor wraca na górę do potwierdzenia. Wspólne ikony SVG ty
 
 ## 1.7.2
 Wszystkie przyciski akcji w panelu CMS mają wspólny styl Zapisz treść, również pobieranie plików, zakładki i nawigacja. Spójne stany hover, focus i disabled.
+
+## 1.7.3
+Wyrównanie do lewej, środka, prawej i justowanie w widocznym pasku rich text, także w krótkim opisie. Bez miniatury karta i podgląd mapy używają logo strony z opacity 30%; CMS pokazuje ten sam podgląd.
