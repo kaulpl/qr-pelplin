@@ -14,3 +14,6 @@
 .qrpa-sidebar>button,.qrpa-sidebar>a{width:100%;justify-content:flex-start;text-align:left}.qrpc-pagination .button,.qrpc-text-section .button{min-width:40px}.qrpr-actions a{margin:0}@media(prefers-reduced-motion:reduce){.qrpa button,.qrpa a{transition:none!important}}@media(max-width:700px){.qrpa-sidebar>button,.qrpa-sidebar>a{width:auto}.qrpa :is(.button,.button-link-delete,.qrpa-primary,.qrpc-title-link),.qrpa-tabs>button,.qrpa-sidebar>button,.qrpa-sidebar>a,.qrpa a[download],.qrpa-save>a,.qrpc-editor-toolbar>a{padding:10px 14px}}
 
 .qrpc-thumbnail-default{height:165px;background:#101b20;border-radius:5px;margin:12px 0;display:flex;align-items:center;justify-content:center;padding:25px}.qrpc-thumbnail-default img{width:100%;height:100%;object-fit:contain;opacity:.3}
+.qrpc-gallery img,.qrpc-thumbnail{height:auto;width:100%;aspect-ratio:2/3;object-fit:cover;object-position:center}.qrpa-media.is-photo .qrpa-media-preview{height:auto;aspect-ratio:2/3}.qrpa-media.is-photo .qrpa-media-preview img{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;object-position:center}
+
+.qrpc-gallery img[src*="/qr-pelplin-"]{aspect-ratio:1;object-fit:contain}

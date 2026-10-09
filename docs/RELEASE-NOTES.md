@@ -51,3 +51,6 @@ Wyrównanie do lewej, środka, prawej i justowanie w widocznym pasku rich text, 
 
 ## 1.7.4
 Podpis obrazu z biblioteki mediów jest prezentowany jako autor / źródło pod zdjęciem w galerii, podglądzie i zdjęciu wstawionym w treść. Wspólny styl informacji z ikoną akcentu, wyrównanie do prawej bez bocznego wcięcia.
+
+## 1.7.5
+Zdjęcia w proporcjach 2:3 z centralnym kadrowaniem: karty, kategorie, galeria, treść, podgląd, mapa i CMS. Tło hero w pionowym kadrze przy zachowaniu zwartego nagłówka. Oryginalne pliki, logo i kody QR pozostają bez zmian.
