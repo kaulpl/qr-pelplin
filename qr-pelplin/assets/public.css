@@ -49,3 +49,23 @@
 .qrp-prose img[src*="/qr-pelplin-"],.qrp-document-page>img[src*="/qr-pelplin-"],.qrp-gallery-photo>a>img[src*="/qr-pelplin-"]{aspect-ratio:1;object-fit:contain}
 
 .qrp-lightbox>img.qrp-qr-image{aspect-ratio:1;object-fit:contain}
+
+/* Photo metadata */
+.qrp-photo-frame{position:relative;width:100%;overflow:hidden;border-radius:8px}
+.qrp-photo-frame>img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;object-position:center}
+.qrp-photo-frame>img[src*="/qr-pelplin-"]{aspect-ratio:1;object-fit:contain}
+.qrp-photo-frame .qrp-photo-title{position:absolute;left:8px;bottom:8px;max-width:calc(100% - 16px);margin:0;padding:7px 10px;background:rgba(8,16,19,.88);border-radius:5px;color:#eef0eb;font-size:12px;line-height:1.4;text-align:left;align-items:center;overflow-wrap:anywhere}
+.qrp-photo-title svg{width:18px;height:18px;flex-shrink:0;color:var(--qrp-accent)}
+.qrp-gallery-photo .qrp-gallery-credit,.qrp-lightbox-credit .qrp-gallery-credit{display:flex;justify-content:flex-end;margin:4px 0 0;position:relative}
+.qrp-credit-details{position:relative;text-align:right}
+.qrp-credit-details>summary{list-style:none;display:flex;cursor:pointer;color:var(--qrp-accent);padding:4px;border-radius:50%;width:26px;height:26px;box-sizing:border-box}
+.qrp-credit-details>summary::-webkit-details-marker{display:none}
+.qrp-credit-details>summary svg{width:18px;height:18px}
+.qrp-credit-details>summary:focus-visible{outline:2px solid var(--qrp-accent);outline-offset:2px}
+.qrp-credit-details>.qrp-credit-tooltip{position:absolute;right:0;bottom:100%;z-index:20;width:max-content;max-width:min(280px,80vw);padding:10px 12px;border:1px solid var(--qrp-accent);border-radius:7px;background:#101b20;box-shadow:0 6px 24px #0008;color:#dbe2dd;text-align:left;font-size:12px;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.qrp-credit-tooltip p{margin:0}.qrp-credit-tooltip a{color:var(--qrp-accent)}
+.qrp-credit-details:not([open])>.qrp-credit-tooltip{display:none}
+@media(hover:hover){.qrp-credit-details:hover>.qrp-credit-tooltip{display:block}}
+
+.qrp-gallery-photo:nth-of-type(6n + 1) .qrp-credit-tooltip{left:0;right:auto}
+@media(max-width:680px){.qrp-gallery-photo:nth-of-type(3n + 1) .qrp-credit-tooltip,.qrp-gallery-photo:nth-of-type(3n + 2) .qrp-credit-tooltip{left:0;right:auto}.qrp-gallery-photo:nth-of-type(3n) .qrp-credit-tooltip{left:auto;right:0}}

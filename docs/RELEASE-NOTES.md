@@ -57,3 +57,6 @@ Zdjęcia w proporcjach 2:3 z centralnym kadrowaniem: karty, kategorie, galeria, 
 
 ## 1.7.6
 Zdjęcia związane z wpisami w poziomych proporcjach 3:2: treść, miniatury wpisów, galerie, mapa i podgląd. Hero, kafelki kategorii i pozostałe grafiki przywrócone do wyglądu sprzed zmian proporcji.
+
+## 1.7.7
+Podpisy galerii pod ikoną informacji (hover lub kliknięcie, także w podglądzie). Zdjęcia w treści pokazują tytuł z biblioteki mediów w lewym dolnym rogu.
