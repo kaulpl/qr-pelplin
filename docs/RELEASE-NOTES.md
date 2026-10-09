@@ -60,3 +60,6 @@ Zdjęcia związane z wpisami w poziomych proporcjach 3:2: treść, miniatury wpi
 
 ## 1.7.7
 Podpisy galerii pod ikoną informacji (hover lub kliknięcie, także w podglądzie). Zdjęcia w treści pokazują tytuł z biblioteki mediów w lewym dolnym rogu.
+
+## 1.7.8
+Tooltip podpisu galerii zamyka się automatycznie 5 sekund po otwarciu ikoną informacji. Ponowne otwarcie rozpoczyna nowy odliczany czas, również w podglądzie galerii.

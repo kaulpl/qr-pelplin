@@ -65,7 +65,7 @@
 .qrp-credit-details>.qrp-credit-tooltip{position:absolute;right:0;bottom:100%;z-index:20;width:max-content;max-width:min(280px,80vw);padding:10px 12px;border:1px solid var(--qrp-accent);border-radius:7px;background:#101b20;box-shadow:0 6px 24px #0008;color:#dbe2dd;text-align:left;font-size:12px;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
 .qrp-credit-tooltip p{margin:0}.qrp-credit-tooltip a{color:var(--qrp-accent)}
 .qrp-credit-details:not([open])>.qrp-credit-tooltip{display:none}
-@media(hover:hover){.qrp-credit-details:hover>.qrp-credit-tooltip{display:block}}
+@media(hover:hover){.qrp-credit-details:not(.qrp-credit-dismissed):hover>.qrp-credit-tooltip{display:block}}
 
 .qrp-gallery-photo:nth-of-type(6n + 1) .qrp-credit-tooltip{left:0;right:auto}
 @media(max-width:680px){.qrp-gallery-photo:nth-of-type(3n + 1) .qrp-credit-tooltip,.qrp-gallery-photo:nth-of-type(3n + 2) .qrp-credit-tooltip{left:0;right:auto}.qrp-gallery-photo:nth-of-type(3n) .qrp-credit-tooltip{left:auto;right:0}}

@@ -1,5 +1,19 @@
 import L from 'leaflet';import 'leaflet/dist/leaflet.css';
 const config = window.qrpPublic;
+const creditTimers = new WeakMap();
+document.addEventListener('toggle', event => {
+ const detail=event.target;
+ if(!(detail instanceof HTMLDetailsElement)||!detail.classList.contains('qrp-credit-details'))return;
+ clearTimeout(creditTimers.get(detail));
+ if(detail.open){
+  detail.classList.remove('qrp-credit-dismissed');
+  creditTimers.set(detail,setTimeout(()=>{detail.classList.add('qrp-credit-dismissed');detail.open=false;creditTimers.delete(detail);},5000));
+ }else detail.classList.add('qrp-credit-dismissed');
+},true);
+document.addEventListener('pointerout',event=>{
+ const detail=event.target.closest?.('.qrp-credit-details');
+ if(detail&&!detail.contains(event.relatedTarget))detail.classList.remove('qrp-credit-dismissed');
+});
 const node = (tag, text, cls) => { const e = document.createElement(tag); if (text) e.textContent = text; if (cls) e.className = cls; return e; };
 function card(item) {
   const article=node('article',null,'qrp-card'), a=node('a'), picture=node('div',null,'qrp-card-image'), img=node('img');
@@ -30,7 +44,7 @@ for(const section of document.querySelectorAll('.qrp-map-section')){
 for(const element of document.querySelectorAll('[data-entry-map]')){const point=[Number(element.dataset.lat),Number(element.dataset.lng)];const map=createMap(element,...point,16);L.marker(point,{icon:pinIcon}).addTo(map);}
 for(const gallery of document.querySelectorAll('.qrp-gallery')){
  const photos=[...gallery.querySelectorAll('[data-gallery-photo]')];if(!photos.length)continue;const dialog=node('dialog',null,'qrp-lightbox'),close=node('button','✕','qrp-outline'),previous=node('button','←','qrp-outline'),next=node('button','→','qrp-outline'),image=node('img'),credit=node('div',null,'qrp-lightbox-credit'),counter=node('p');close.setAttribute('aria-label','Zamknij galerię');previous.setAttribute('aria-label','Poprzednie zdjęcie');next.setAttribute('aria-label','Następne zdjęcie');dialog.setAttribute('aria-label','Galeria zdjęć');dialog.append(close,image,credit,previous,counter,next);document.body.append(dialog);let index=0;
- function show(i){index=(i+photos.length)%photos.length;image.src=photos[index].href;image.classList.toggle('qrp-qr-image',/\/qr-pelplin-\d+-[a-f0-9]+(?:-[0-9x]+)?\.png(?:\?|$)/.test(photos[index].href));image.alt=photos[index].querySelector('img')?.alt||'Zdjęcie z galerii';const original=photos[index].closest('figure')?.querySelector('figcaption');credit.replaceChildren();credit.hidden=!original;if(original){const caption=original.cloneNode(true);caption.querySelectorAll('details').forEach(detail=>detail.open=false);credit.append(caption);};counter.textContent=(index+1)+' / '+photos.length;}
+ function show(i){index=(i+photos.length)%photos.length;image.src=photos[index].href;image.classList.toggle('qrp-qr-image',/\/qr-pelplin-\d+-[a-f0-9]+(?:-[0-9x]+)?\.png(?:\?|$)/.test(photos[index].href));image.alt=photos[index].querySelector('img')?.alt||'Zdjęcie z galerii';const original=photos[index].closest('figure')?.querySelector('figcaption');credit.replaceChildren();credit.hidden=!original;if(original){const caption=original.cloneNode(true);caption.querySelectorAll('details').forEach(detail=>{detail.open=false;detail.classList.remove('qrp-credit-dismissed');});credit.append(caption);};counter.textContent=(index+1)+' / '+photos.length;}
  photos.forEach((photo,i)=>photo.addEventListener('click',event=>{event.preventDefault();show(i);dialog.showModal();}));close.addEventListener('click',()=>dialog.close());previous.addEventListener('click',()=>show(index-1));next.addEventListener('click',()=>show(index+1));dialog.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();show(index-1);}if(e.key==='ArrowRight'){e.preventDefault();show(index+1);}});dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});let touch;image.addEventListener('touchstart',e=>touch=e.changedTouches[0].clientX,{passive:true});image.addEventListener('touchend',e=>{const delta=e.changedTouches[0].clientX-touch;if(Math.abs(delta)>40)show(index+(delta<0?1:-1));},{passive:true});
 }
 const entry=document.querySelector('[data-entry-id]');
