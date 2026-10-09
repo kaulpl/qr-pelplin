@@ -66,6 +66,7 @@ add_action('template_redirect',function(){
     while(ob_get_level())ob_end_clean();$handle=fopen($real,'rb');if($handle){fpassthru($handle);fclose($handle);}exit;
 },2);
 function qrp_info_icon(){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg>';}
+function qrp_photo_credit($id){$caption=trim((string)wp_get_attachment_caption($id));if($caption==='')return '';return '<figcaption class="qrp-material-info qrp-photo-caption">'.qrp_info_icon().'<span>'.wp_kses_post($caption).'</span></figcaption>';}
 function qrp_render_file($file,$autoplay=false){
     if(!$file)return;
     if($file['type']==='audio'){
@@ -73,7 +74,7 @@ function qrp_render_file($file,$autoplay=false){
     }elseif($file['type']==='video'){
         echo '<section class="qrp-video-player"><h2>'.esc_html($file['title']).'</h2><video controls preload="metadata" src="'.esc_url($file['url']).'"></video></section>';
     }elseif($file['type']==='image'){
-        echo '<figure class="qrp-document-page"><img src="'.esc_url($file['url']).'" alt="'.esc_attr($file['title']).'" loading="lazy"><figcaption>'.esc_html($file['title']).'</figcaption></figure>';
+        echo '<figure class="qrp-document-page"><img src="'.esc_url($file['url']).'" alt="'.esc_attr($file['title']).'" loading="lazy">'.(qrp_photo_credit($file['id'])?:'<figcaption>'.esc_html($file['title']).'</figcaption>').'</figure>';
     }elseif($file['type']==='pdf'){
         echo '<section class="qrp-document-page"><h2>'.esc_html('PDF: '.$file['title']).'</h2><div class="qrp-pdf-viewer" data-pdf-viewer data-pdf-url="'.esc_url($file['url']).'"><div class="qrp-pdf-toolbar"><button type="button" class="qrp-outline" data-pdf-prev disabled aria-label="Poprzednia strona">←</button><label>Strona <input type="number" min="1" value="1" data-pdf-page aria-label="Numer strony PDF"></label><span data-pdf-counter></span><button type="button" class="qrp-outline" data-pdf-next disabled aria-label="Następna strona">→</button></div><p data-pdf-status role="status">Otwieranie PDF…</p><div class="qrp-pdf-sheet" data-pdf-sheet><canvas role="img" aria-label="Podgląd PDF"></canvas></div><details class="qrp-pdf-text"><summary>Tekst strony</summary><p data-pdf-text></p></details></div><p class="qrp-material-info">'.qrp_info_icon().'<span>Możesz także <a href="'.esc_url($file['url']).'" target="_blank" rel="noopener">otworzyć PDF w osobnym oknie ↗</a>.</span></p><noscript><object data="'.esc_url($file['url']).'" type="application/pdf" class="qrp-pdf"><a href="'.esc_url($file['url']).'">Otwórz PDF</a></object></noscript></section>';
     }else{

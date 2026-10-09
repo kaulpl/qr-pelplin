@@ -48,3 +48,6 @@ Wszystkie przyciski akcji w panelu CMS mają wspólny styl Zapisz treść, równ
 
 ## 1.7.3
 Wyrównanie do lewej, środka, prawej i justowanie w widocznym pasku rich text, także w krótkim opisie. Bez miniatury karta i podgląd mapy używają logo strony z opacity 30%; CMS pokazuje ten sam podgląd.
+
+## 1.7.4
+Podpis obrazu z biblioteki mediów jest prezentowany jako autor / źródło pod zdjęciem w galerii, podglądzie i zdjęciu wstawionym w treść. Wspólny styl informacji z ikoną akcentu, wyrównanie do prawej bez bocznego wcięcia.
