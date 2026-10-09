@@ -39,3 +39,6 @@ Spójny wygląd MP3 i informacji PDF. Ustawienia SEO portalu i wpisów: tytuły,
 
 ## 1.7.0
 Favicon w CMS. Znaczniki zdjęć i plików w treści, renderowanie materiałów po publikacji i brak powtórzeń załączników. Rozdzielenie weryfikacji Search Console przez DNS TXT i metatag HTML.
+
+## 1.7.1
+Po udanym zapisie edytor wraca na górę do potwierdzenia. Wspólne ikony SVG typów plików w kolorze akcentu dla załączników i pliku głównego: PDF, audio, dokumenty, arkusze, prezentacje, zdjęcia, filmy i archiwa. Obsługa PPT/PPTX, OpenDocument i dodatkowych popularnych formatów.
