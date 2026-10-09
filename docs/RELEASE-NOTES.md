@@ -36,3 +36,6 @@ Nagłówek Zobacz na mapie: nad mapą pojedynczego wpisu na wszystkich rozmiarac
 
 ## 1.6.0
 Spójny wygląd MP3 i informacji PDF. Ustawienia SEO portalu i wpisów: tytuły, opisy, indeksowanie, canonical, Open Graph, dane JSON-LD, weryfikacja Search Console i filtrowanie mapy witryny.
+
+## 1.7.0
+Favicon w CMS. Znaczniki zdjęć i plików w treści, renderowanie materiałów po publikacji i brak powtórzeń załączników. Rozdzielenie weryfikacji Search Console przez DNS TXT i metatag HTML.

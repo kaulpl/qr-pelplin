@@ -16,6 +16,7 @@ add_action('admin_enqueue_scripts',function($hook){
         wp_enqueue_script('qrp-admin',QRP_URL.'assets/dist/admin.js',['editor','jquery'],QRP_VERSION,true);
         $categories=get_terms(['taxonomy'=>'qrp_category','hide_empty'=>false]); $s=qrp_settings();
         wp_localize_script('qrp-admin','qrpAdmin',[
+            'dnsHost'=>wp_parse_url(home_url(),PHP_URL_HOST),
             'seoExternal'=>qrp_seo_external(),'wpIndexing'=>(bool)get_option('blog_public'),'sitemap'=>home_url('/wp-sitemap.xml'),
             'systemLogo'=>QRP_URL.'assets/pelplin-qr.svg','defaultCategoryImages'=>qrp_default_category_images(),
             'api'=>rest_url('qr-pelplin/v1/'),'nonce'=>wp_create_nonce('wp_rest'),'settings'=>$s,
@@ -23,7 +24,7 @@ add_action('admin_enqueue_scripts',function($hook){
             'page'=>current_user_can('manage_options')?sanitize_key($_GET['page']??'qrp-dashboard'):'qrp-items','version'=>QRP_VERSION,
             'pages'=>array_map(function($p){return ['id'=>$p->ID,'title'=>$p->post_title];},get_pages()),
             'categories'=>is_wp_error($categories)?[]:array_map(function($t){return ['id'=>$t->term_id,'name'=>$t->name];},$categories),
-            'images'=>array_map(function($id){return ['id'=>$id,'url'=>qrp_image($id)];},array_values(array_unique(array_filter(array_merge([$s['seo_image'],$s['logo'],$s['footer_logo'],$s['hero_image'],$s['map_image'],$s['about_image']],array_values($s['category_images'])))))),
+            'images'=>array_map(function($id){return ['id'=>$id,'url'=>qrp_image($id)];},array_values(array_unique(array_filter(array_merge([$s['favicon'],$s['seo_image'],$s['logo'],$s['footer_logo'],$s['hero_image'],$s['map_image'],$s['about_image']],array_values($s['category_images'])))))),
             'preview'=>qrp_landing_url(),'add'=>admin_url('admin.php?page=qrp-items&new=1'),'posts'=>admin_url('admin.php?page=qrp-items'),
             'export'=>html_entity_decode(wp_nonce_url(admin_url('admin-post.php?action=qrp_export'),'qrp_export'),ENT_QUOTES,'UTF-8'),
         ]);

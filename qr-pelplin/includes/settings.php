@@ -2,7 +2,7 @@
 defined('ABSPATH') || exit;
 function qrp_defaults() {
     return [
-        'seo_enabled'=>true,'seo_index'=>true,'seo_title'=>'Pelplin QR — odkrywaj miejsca i historie','seo_description'=>'Odkryj Pelplin przez kody QR: historie, zabytki, zdjęcia, dokumenty i nagrania. Poznaj miejsca na mapie miasta.','seo_site_name'=>'Pelplin QR','seo_image'=>0,'seo_verification'=>'','seo_schema'=>true,
+        'favicon'=>0,'gsc_method'=>'dns','seo_enabled'=>true,'seo_index'=>true,'seo_title'=>'Pelplin QR — odkrywaj miejsca i historie','seo_description'=>'Odkryj Pelplin przez kody QR: historie, zabytki, zdjęcia, dokumenty i nagrania. Poznaj miejsca na mapie miasta.','seo_site_name'=>'Pelplin QR','seo_image'=>0,'seo_verification'=>'','seo_schema'=>true,
         'landing_page' => 0, 'brand' => 'PELPLIN', 'logo' => 0, 'footer_logo' => 0,
         'hero_image' => 0, 'hero_eyebrow' => 'TREŚCI DOSTĘPNE PO ZESKANOWANIU KODÓW QR',
         'hero_title' => "Pelplin\nbliżej Ciebie", 'hero_text' => 'Zeskanuj kod QR w wybranym miejscu i odkryj historie, ciekawostki oraz multimedia związane z naszym miastem.',
@@ -23,7 +23,7 @@ function qrp_defaults() {
         'category_images' => [], 'qr_size' => 1024,
     ];
 }
-function qrp_settings() { $saved=(array)get_option('qrp_settings',[]); if(!isset($saved['landing_page']) && get_option('qrp_landing_page')) $saved['landing_page']=absint(get_option('qrp_landing_page')); return array_replace(qrp_defaults(),$saved); }
+function qrp_settings() { $saved=(array)get_option('qrp_settings',[]);if(!isset($saved['gsc_method'])&&!empty($saved['seo_verification']))$saved['gsc_method']='html'; if(!isset($saved['landing_page']) && get_option('qrp_landing_page')) $saved['landing_page']=absint(get_option('qrp_landing_page')); return array_replace(qrp_defaults(),$saved); }
 function qrp_clean_link($url) {
     $url = trim((string)$url);
     return str_starts_with($url, '#') ? '#' . sanitize_title(substr($url,1)) : esc_url_raw($url, ['http','https','mailto','tel']);
@@ -32,8 +32,9 @@ function qrp_sanitize_settings($input) {
     $old = qrp_settings(); $out = $old;
     foreach (['brand','hero_eyebrow','hero_title','hero_text','hero_button','categories_title','content_title','map_title','map_text','about_title','about_text','footer_text','copyright'] as $k) if (isset($input[$k])) $out[$k] = in_array($k,['hero_text','map_text','about_text','footer_text'],true)?wp_kses_post(substr((string)$input[$k],0,5000)):sanitize_textarea_field(substr((string)$input[$k],0,5000));
     foreach(['seo_title','seo_description','seo_site_name'] as $key)if(isset($input[$key]))$out[$key]=sanitize_text_field(substr((string)$input[$key],0,500));
-    if(isset($input['seo_verification']))$out['seo_verification']=preg_replace('/[^a-zA-Z0-9_.-]/','',(string)$input['seo_verification']);
-    foreach (['seo_image','logo','footer_logo','hero_image','map_image','about_image'] as $k) if (isset($input[$k])) {
+    if(isset($input['gsc_method'])&&in_array($input['gsc_method'],['dns','html'],true))$out['gsc_method']=$input['gsc_method'];
+    if(isset($input['seo_verification'])){$token=trim((string)$input['seo_verification']);if(preg_match('/content=["\']([^"\']+)["\']/i',$token,$match))$token=$match[1];$token=preg_replace('/^google-site-verification\s*=\s*/i','',$token);$out['seo_verification']=preg_replace('/[^a-zA-Z0-9_.-]/','',$token);}
+    foreach (['favicon','seo_image','logo','footer_logo','hero_image','map_image','about_image'] as $k) if (isset($input[$k])) {
         $id=absint($input[$k]); $out[$k] = $id && wp_attachment_is_image($id) ? $id : 0;
     }
     if (isset($input['landing_page'])) {

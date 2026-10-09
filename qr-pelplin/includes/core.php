@@ -117,3 +117,6 @@ add_action('template_redirect',function(){
     if(is_tax('qrp_category')&&get_query_var('paged')>1)$url=trailingslashit($url).'page/'.absint(get_query_var('paged')).'/';
     wp_safe_redirect($url,301);exit;
 },1);
+
+add_action('template_redirect',function(){if(qrp_is_portal()&&qrp_settings()['favicon'])remove_action('wp_head','wp_site_icon',99);},21);
+add_action('wp_head',function(){if(!qrp_is_portal())return;$icon=qrp_image(qrp_settings()['favicon'],'full');if($icon)echo '<link rel="icon" href="'.esc_url($icon).'">' . "\n" . '<link rel="apple-touch-icon" href="'.esc_url($icon).'">' . "\n";},4);

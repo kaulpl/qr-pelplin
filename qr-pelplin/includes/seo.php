@@ -15,7 +15,7 @@ add_filter('pre_get_document_title',function($title){return qrp_seo_active()&&qr
 add_action('template_redirect',function(){if(qrp_seo_active()&&qrp_is_portal())remove_action('wp_head','rel_canonical');},20);
 add_filter('wp_robots',function($robots){if(qrp_seo_active()&&qrp_is_portal()){$data=qrp_seo_data();if($data['noindex']){$robots['noindex']=true;unset($robots['index']);}$robots['max-image-preview']='large';}return $robots;});
 add_action('wp_head',function(){
-    if(!qrp_is_portal())return;$s=qrp_settings();if($s['seo_verification'])echo '<meta name="google-site-verification" content="'.esc_attr($s['seo_verification']).'">' . "\n";
+    if(!qrp_is_portal())return;$s=qrp_settings();if($s['gsc_method']==='html'&&$s['seo_verification'])echo '<meta name="google-site-verification" content="'.esc_attr($s['seo_verification']).'">' . "\n";
     if(!qrp_seo_active())return;$data=qrp_seo_data();
     echo '<meta name="description" content="'.esc_attr($data['description']).'">' . "\n" . '<link rel="canonical" href="'.esc_url($data['url']).'">' . "\n";
     foreach(['og:title'=>$data['title'],'og:description'=>$data['description'],'og:url'=>$data['url'],'og:type'=>$data['post']?'article':'website','og:site_name'=>$data['name'],'og:locale'=>str_replace('-','_',get_bloginfo('language'))] as $key=>$value)echo '<meta property="'.esc_attr($key).'" content="'.esc_attr($value).'">' . "\n";

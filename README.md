@@ -1,4 +1,4 @@
-# QR Pelplin 1.6.0
+# QR Pelplin 1.7.0
 
 Samodzielna wtyczka WordPress: ciemny portal miejski, CMS landing page, treści QR, mapa miejsc, generator SVG/PNG i statystyki. Vue 3 w panelu administracyjnym, WordPress REST API i lekki JavaScript na froncie. Nie wymaga serwera Node.js na hostingu.
 
@@ -102,3 +102,8 @@ Zakładka Kody QR pokazuje wygenerowane kody, ich stałe adresy, cele i pliki SV
 
 ## SEO (1.6.0)
 W Wygląd i CMS → SEO i wyszukiwarki ustaw tytuł i opis strony głównej, nazwę portalu, obraz udostępniania, indeksowanie i kod weryfikacji Search Console. Edytor wpisu zawiera własny tytuł, opis i blokadę indeksowania. Wtyczka respektuje ustawienia indeksowania WordPressa oraz obecność popularnych wtyczek SEO. Mapa WordPressa /wp-sitemap.xml pomija chronione i nieindeksowane wpisy QR.
+
+## Media w treści i favicon (1.7.0)
+Przycisk Wstaw do tekstu dodaje [qrp_image id="123"] lub [qrp_file id="456"]. Publikacja renderuje te materiały, a pliki wstawione w treść nie są powtarzane pod wpisem. Materiał musi być dołączony do danego wpisu. Favicon wybierzesz w Wygląd i CMS → Nagłówek i hero.
+
+Search Console: usługa Domena wymaga DNS TXT u dostawcy domeny; ustawienia WordPressa tylko przygotowują wartość rekordu. Dla qr.pelplin.pl w strefie pelplin.pl host to qr, a w osobnej strefie qr.pelplin.pl to @. Metatag HTML obsługuje usługę z prefiksem URL. Oficjalna instrukcja: https://support.google.com/webmasters/answer/9008080?hl=pl

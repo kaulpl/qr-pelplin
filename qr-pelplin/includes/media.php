@@ -34,6 +34,7 @@ function qrp_primary_file($id){
     return $file?:qrp_media_file(get_post_meta($id,'qrp_audio',true));
 }
 function qrp_delivery($post){
+    if(qrp_inline_ids($post))return 'content';
     $mode=qrp_clean_delivery(get_post_meta($post->ID,'qrp_delivery',true));$file=qrp_primary_file($post->ID);
     if(!$file)return 'content';
     if($mode==='auto')return qrp_has_content($post)?'content':($file['type']==='audio'?'audio':($file['type']==='pdf'?'preview':'download'));
