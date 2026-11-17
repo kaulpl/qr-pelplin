@@ -17,3 +17,8 @@
 .qrpc-gallery img,.qrpc-thumbnail{height:auto;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center}
 
 .qrpc-gallery img[src*="/qr-pelplin-"]{aspect-ratio:1;object-fit:contain}
+
+.qrpc-crop-stage{position:relative;width:fit-content;max-width:100%;overflow:hidden;margin-bottom:10px}
+.qrpc-crop-stage>img{display:block;width:auto;height:auto;max-width:100%;max-height:360px}
+.qrpc-crop-mask{position:absolute;box-sizing:border-box;border:2px solid #fff;box-shadow:0 0 0 100vmax #0009;cursor:grab;touch-action:none}
+.qrpc-crop-mask:active{cursor:grabbing}

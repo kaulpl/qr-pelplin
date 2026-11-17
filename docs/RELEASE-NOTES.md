@@ -66,3 +66,6 @@ Tooltip podpisu galerii zamyka się automatycznie 5 sekund po otwarciu ikoną in
 
 ## 1.7.9
 Zdjęcia we wpisach zachowują oryginalne proporcje. Przycisk Powiększ otwiera podgląd zdjęcia dopasowany do okna, bez kadrowania.
+
+## 1.7.10
+Przesuwana maska 3:2 do kadrowania miniatur wpisów. Zdjęcie otwiera podgląd po kliknięciu, a tytuł i przycisk Powiększ są pod zdjęciem.

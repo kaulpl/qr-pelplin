@@ -7,6 +7,7 @@ function qrp_editor_entry($post){
     $asset=function($aid)use($id){$file=qrp_media_file($aid,$id);if(!$file)return null;$file['display_name']=$file['title'];$file['thumbnail']=wp_get_attachment_image_url($aid,'medium')?:'';return $file;};
     $terms=wp_get_post_terms($id,'qrp_category',['fields'=>'ids']);
     return ['seo_title'=>get_post_meta($id,'qrp_seo_title',true),'seo_description'=>get_post_meta($id,'qrp_seo_description',true),'seo_noindex'=>(bool)get_post_meta($id,'qrp_seo_noindex',true),'id'=>$id,'title'=>$post->post_title,'excerpt'=>$post->post_excerpt,'slug'=>$post->post_name,'status'=>$post->post_status,'modified'=>$post->post_modified,'sections'=>$sections,'categories'=>is_wp_error($terms)?[]:$terms,
+        'thumbnail_crop'=>qrp_thumbnail_crop($id),
         'thumbnail'=>get_post_thumbnail_id($id)?$asset(get_post_thumbnail_id($id)):null,
         'gallery'=>array_values(array_filter(array_map($asset,qrp_clean_gallery(get_post_meta($id,'qrp_gallery',true))))),
         'attachments'=>array_values(array_filter(array_map($asset,array_values(array_unique(array_merge(qrp_entry_files($id),array_filter([absint(get_post_meta($id,'qrp_audio',true)),absint(get_post_meta($id,'qrp_video',true))]))))))),
@@ -39,6 +40,10 @@ function qrp_editor_save($request){
     foreach(['address'=>'qrp_address','lat'=>'qrp_lat','lng'=>'qrp_lng'] as $input=>$key)update_post_meta($saved,$key,sanitize_text_field((string)($data[$input]??'')));
     update_post_meta($saved,'qrp_delivery',qrp_clean_delivery($data['delivery']??'auto'));wp_set_object_terms($saved,$categories,'qrp_category');
     $thumbnail=is_array($data['thumbnail']??null)?absint($data['thumbnail']['id']??0):0;if($thumbnail&&wp_attachment_is_image($thumbnail))set_post_thumbnail($saved,$thumbnail);else delete_post_thumbnail($saved);
+    if(array_key_exists('thumbnail_crop',$data)){
+        if($thumbnail&&(int)get_post_thumbnail_id($saved)===$thumbnail&&is_array($data['thumbnail_crop']))update_post_meta($saved,'qrp_thumbnail_crop',['id'=>$thumbnail]+qrp_clean_thumbnail_crop($data['thumbnail_crop']));
+        else delete_post_meta($saved,'qrp_thumbnail_crop');
+    }
     return qrp_editor_entry(get_post($saved));
 }
 add_action('rest_api_init',function(){
