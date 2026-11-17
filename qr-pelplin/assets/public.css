@@ -72,7 +72,8 @@
 
 /* Entry photos use their intrinsic proportions within the previous height limit. */
 .qrp-entry{container-type:inline-size}
-.qrp-entry .qrp-entry-cover,.qrp-entry .qrp-prose img,.qrp-entry .qrp-photo-frame>img,.qrp-entry .qrp-document-page>img{
+.qrp-entry .qrp-entry-cover{width:min(100%,640px);height:auto;max-height:none;aspect-ratio:3/2;object-fit:cover}
+.qrp-entry .qrp-prose img,.qrp-entry .qrp-photo-frame>img,.qrp-entry .qrp-document-page>img{
  width:auto;height:auto;max-width:min(100%,640px);max-height:min(426.67px,66.667cqw);aspect-ratio:auto;object-fit:contain;margin-inline:auto
 }
 .qrp-entry .qrp-photo-frame{display:block;width:fit-content;max-width:100%;margin-inline:auto}

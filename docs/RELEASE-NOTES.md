@@ -72,3 +72,6 @@ Przesuwana maska 3:2 do kadrowania miniatur wpisów. Zdjęcie otwiera podgląd p
 
 ## 1.7.11
 Pobrane kody SVG i PNG otrzymują nazwę pelplin-NRQR-tytul-artykulu.
+
+## 1.7.12
+Miniatura na początku wpisu używa proporcji 3:2 i kadru zapisanego dla kafelka.
