@@ -63,3 +63,6 @@ Podpisy galerii pod ikoną informacji (hover lub kliknięcie, także w podglądz
 
 ## 1.7.8
 Tooltip podpisu galerii zamyka się automatycznie 5 sekund po otwarciu ikoną informacji. Ponowne otwarcie rozpoczyna nowy odliczany czas, również w podglądzie galerii.
+
+## 1.7.9
+Zdjęcia we wpisach zachowują oryginalne proporcje. Przycisk Powiększ otwiera podgląd zdjęcia dopasowany do okna, bez kadrowania.

@@ -69,3 +69,16 @@
 
 .qrp-gallery-photo:nth-of-type(6n + 1) .qrp-credit-tooltip{left:0;right:auto}
 @media(max-width:680px){.qrp-gallery-photo:nth-of-type(3n + 1) .qrp-credit-tooltip,.qrp-gallery-photo:nth-of-type(3n + 2) .qrp-credit-tooltip{left:0;right:auto}.qrp-gallery-photo:nth-of-type(3n) .qrp-credit-tooltip{left:auto;right:0}}
+
+/* Entry photos use their intrinsic proportions within the previous height limit. */
+.qrp-entry{container-type:inline-size}
+.qrp-entry .qrp-entry-cover,.qrp-entry .qrp-prose img,.qrp-entry .qrp-photo-frame>img,.qrp-entry .qrp-document-page>img{
+ width:auto;height:auto;max-width:min(100%,640px);max-height:min(426.67px,66.667cqw);aspect-ratio:auto;object-fit:contain;margin-inline:auto
+}
+.qrp-entry .qrp-photo-frame{display:block;width:fit-content;max-width:100%;margin-inline:auto}
+.qrp-gallery-photo>a{container-type:inline-size}
+.qrp-gallery-photo>a>img,.qrp-gallery-photo>a>img[src*="/qr-pelplin-"]{width:auto;max-width:100%;height:auto;max-height:66.667cqw;aspect-ratio:auto;object-fit:contain;margin-inline:auto}
+.qrp-lightbox>img,.qrp-lightbox>img.qrp-qr-image{width:auto;height:auto;max-width:100%;max-height:68vh;max-height:68dvh;aspect-ratio:auto;object-fit:contain;margin:8px auto}
+.qrp-photo-frame .qrp-photo-zoom{position:absolute;right:8px;bottom:8px;align-items:center;margin:0;padding:7px 10px;border-radius:5px;background:rgba(8,16,19,.88);color:#eef0eb;font-size:12px;line-height:1.4;text-decoration:none!important}
+.qrp-photo-frame:has(.qrp-photo-zoom) .qrp-photo-title{bottom:48px}
+@media(hover:hover){.qrp-photo-frame:not(:hover):not(:focus-within) .qrp-photo-zoom{opacity:0}.qrp-photo-frame:not(:hover):not(:focus-within) .qrp-photo-title{bottom:8px}}
