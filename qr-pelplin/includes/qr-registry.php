@@ -4,9 +4,15 @@ function qrp_qr_target($source){
     $target=(int)get_post_meta($source->ID,'qrp_qr_target',true);$post=$target?get_post($target):$source;
     return $post && $post->post_type==='qrp_item' && $post->post_status==='publish' && !$post->post_password ? $post : false;
 }
+function qrp_qr_download_name($post){
+    $target_id=(int)get_post_meta($post->ID,'qrp_qr_target',true)?:$post->ID;
+    $title=get_post_field('post_title',$target_id,'raw');
+    $title=sanitize_title(wp_strip_all_tags(html_entity_decode($title,ENT_QUOTES,'UTF-8')));
+    return 'pelplin-'.$post->ID.'-'.($title?:'bez-tytulu');
+}
 function qrp_qr_row($post){
     $target=qrp_qr_target($post);$target_id=(int)get_post_meta($post->ID,'qrp_qr_target',true)?:$post->ID;
-    return ['id'=>$post->ID,'title'=>$post->post_title,'url'=>qrp_scan_url($post->ID),'target_id'=>$target_id,'target_title'=>get_the_title($target_id)?:'Usunięta treść','target_url'=>$target?qrp_target_url($target):'','available'=>(bool)$target,'png'=>wp_get_attachment_url(get_post_meta($post->ID,'qrp_qr_png',true))?:'','svg'=>wp_get_attachment_url(get_post_meta($post->ID,'qrp_qr_svg',true))?:''];
+    return ['download_name'=>qrp_qr_download_name($post),'id'=>$post->ID,'title'=>$post->post_title,'url'=>qrp_scan_url($post->ID),'target_id'=>$target_id,'target_title'=>get_the_title($target_id)?:'Usunięta treść','target_url'=>$target?qrp_target_url($target):'','available'=>(bool)$target,'png'=>wp_get_attachment_url(get_post_meta($post->ID,'qrp_qr_png',true))?:'','svg'=>wp_get_attachment_url(get_post_meta($post->ID,'qrp_qr_svg',true))?:''];
 }
 function qrp_qr_reassign($request){
     $source=get_post(absint($request['id']));$data=(array)$request->get_json_params();$target=get_post(absint($data['target_id']??0));

@@ -69,3 +69,6 @@ Zdjęcia we wpisach zachowują oryginalne proporcje. Przycisk Powiększ otwiera 
 
 ## 1.7.10
 Przesuwana maska 3:2 do kadrowania miniatur wpisów. Zdjęcie otwiera podgląd po kliknięciu, a tytuł i przycisk Powiększ są pod zdjęciem.
+
+## 1.7.11
+Pobrane kody SVG i PNG otrzymują nazwę pelplin-NRQR-tytul-artykulu.

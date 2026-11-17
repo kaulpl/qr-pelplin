@@ -13,7 +13,7 @@ function qrp_editor_entry($post){
         'attachments'=>array_values(array_filter(array_map($asset,array_values(array_unique(array_merge(qrp_entry_files($id),array_filter([absint(get_post_meta($id,'qrp_audio',true)),absint(get_post_meta($id,'qrp_video',true))]))))))),
         'primary'=>qrp_primary_file($id)?$asset(qrp_primary_file($id)['id']):null,'delivery'=>get_post_meta($id,'qrp_delivery',true)?:'auto',
         'lat'=>get_post_meta($id,'qrp_lat',true),'lng'=>get_post_meta($id,'qrp_lng',true),'address'=>get_post_meta($id,'qrp_address',true),'url'=>$post->post_status==='publish'?get_permalink($id):get_preview_post_link($post),
-        'qr_png'=>wp_get_attachment_url(get_post_meta($id,'qrp_qr_png',true))?:'','qr_svg'=>wp_get_attachment_url(get_post_meta($id,'qrp_qr_svg',true))?:''];
+        'qr_download_name'=>qrp_qr_download_name($post),'qr_png'=>wp_get_attachment_url(get_post_meta($id,'qrp_qr_png',true))?:'','qr_svg'=>wp_get_attachment_url(get_post_meta($id,'qrp_qr_svg',true))?:''];
 }
 function qrp_editor_save($request){
     $data=(array)$request->get_json_params();$id=absint($request['id']??0);$post=$id?get_post($id):null;
